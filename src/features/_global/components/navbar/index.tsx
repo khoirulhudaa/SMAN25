@@ -355,19 +355,19 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
       </header>
       {/* Header (Desktop + Mobile) */}
       <div
-        className="w-full sticky top-0 z-[4] backdrop-blur justify-between bg-white"
+        className="w-full sticky top-0 z-[4] backdrop-blur shadow-xl justify-between bg-white"
         // style={{ background: "rgba(0,0,0,0.25)", borderBottom: `1px solid ${safeTheme.subtle}` }}
       >
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="w-full flex items-center justify-between py-3 md:py-4">
+        <div className="max-w-7xl mx-auto md:px-1">
+          <div className="w-full flex items-center justify-between px-5 md:px-0 py-3 md:py-4">
             {/* Logo */}
             <div className="flex items-center gap-2 w-[30%]">
               <div className="leading-none flex gap-4 items-center">
-                <div className="rounded-lg bg-blue-500 flex items-center justify-center text-white w-10 h-10 shadow-md">
+                {/* <div className="rounded-lg bg-blue-500 hidden md:flex items-center justify-center text-white w-10 h-10 shadow-md">
                   25
-                </div>
+                </div> */}
                 <div
-                  className="text-base md:text-lg font-semibold"
+                  className="text-md w-max md:text-lg font-semibold"
                   style={{ color: 'black' }}
                 >
                   {safeTheme.name}
@@ -383,7 +383,7 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
             </div>
 
             {/* Login + Mobile Toggle */}
-            <div className="flex items-center w-[30%] justify-end gap-2">
+            <div className="flex items-center w-[30%] justify-end gap-4">
               <LoginMenu theme={safeTheme} />
               <button
                 className="md:hidden inline-flex items-center justify-center flex-col gap-1 w-14 h-14"
@@ -419,19 +419,20 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="fixed left-0 top-0 h-full w-4/5 max-w-sm bg-[rgba(16,23,71,0.98)] border-r shadow-2xl p-4 z-[9999999999999] lg:hidden overflow-y-auto"
+              className="fixed left-0 top-0 h-full w-[100vw] bg-[rgba(16,23,71,0.98)] border-r shadow-2xl p-4 z-[9999999999999] lg:hidden overflow-y-auto"
               style={{ borderColor: safeTheme.subtle }}
             >
-              <div className="flex items-center justify-between mb-6 pt-4">
+              <div className="flex items-center justify-between mb-10 border-b border-white pb-8 pt-4">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-xs"
+                    className="w-8 h-8 rounded-2xl flex items-center justify-center font-bold text-lg"
                     style={{ background: safeTheme.accent, color: "white" }}
                   >
                     {themeKey === "smkn13" ? "13" : themeKey.replace("sman", "")}
                   </div>
+                  |
                   <div
-                    className="text-sm font-semibold"
+                    className="text-lg font-semibold ml-1"
                     style={{ color: safeTheme.primaryText }}
                   >
                     Menu
@@ -439,7 +440,7 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="text-2xl"
+                  className="text-2xl bg-white text-red-600 w-9 h-9 flex items-center justify-center rounded-md"
                   style={{ color: safeTheme.primaryText }}
                   aria-label="Tutup Menu"
                 >

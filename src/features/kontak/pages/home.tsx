@@ -90,14 +90,14 @@
 // };
 
 // const LoadingSpinner = () => (
-//   <div className="flex items-center justify-center text-center py-12">
+//   <div className="flex items-center justify-center md:text-center text-left py-12">
 //     <p>Memuat...</p>
 //     {/* <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-current" style={{ color: theme.gold }}></div> */}
 //   </div>
 // );
 
 // const ErrorMessage = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
-//   <div className="text-center py-12">
+//   <div className="md:text-center text-left py-12">
 //     <p className="text-sm mb-4" style={{ color: theme.muted }}>Gagal memuat data layanan</p>
 //     <button
 //       onClick={onRetry}
@@ -341,7 +341,7 @@
 //         </motion.div>
 
 //         {internal.length === 0 ? (
-//           <div className="text-center py-12">
+//           <div className="md:text-center text-left py-12">
 //             <p className="text-sm" style={{ color: theme.muted }}>Belum ada layanan</p>
 //           </div>
 //         ) : (
@@ -508,7 +508,7 @@
 //         </motion.div>
 
 //         {publicServices.length === 0 ? (
-//           <div className="text-center py-16">
+//           <div className="md:text-center text-left py-16">
 //             <p className="text-sm" style={{ color: theme.muted }}>Belum ada layanan publik</p>
 //           </div>
 //         ) : (
@@ -603,7 +603,7 @@ const Card = ({ children }: any) => (
 );
 
 const Loading = () => (
-  <div className="py-20 text-center text-sm text-black/80">Memuat data…</div>
+  <div className="py-20 md:text-center text-left text-sm text-black/80">Memuat data…</div>
 );
 
 const StarRating = ({ value, onChange }: any) => (
@@ -681,14 +681,14 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-6 max-w-4xl">
+      <div className="relative z-[1] md:text-center text-left -mt-14 text-white px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-6xl font-bold mb-4"
         >
-          Layanan Internal SMAN 25 Jakarta
+          Layanan Internal 
         </motion.h1>
 
         <motion.p
@@ -705,7 +705,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           onClick={scrollToServices}
-          className="px-8 py-4 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition shadow-lg"
+          className="px-8 py-4 rounded-xl bg-white text-black font-medium hover:bg-gray-100 transition shadow-lg"
         >
           Jelajahi Layanan
         </motion.button>
@@ -741,7 +741,7 @@ const ServicesGrid = () => {
   if (isPending) return <Loading />;
   if (error)
     return (
-      <div className="text-center py-20">
+      <div className="md:text-center text-left py-20">
         <button onClick={() => qc.invalidateQueries({ queryKey: ["services"] })}>
           Muat ulang
         </button>
@@ -751,11 +751,11 @@ const ServicesGrid = () => {
   return (
     <section id="layanan-internal" className="py-16 bg-gray-50 relative z-[1]">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-10 text-center text-black">
+        <h2 className="text-3xl font-bold mb-10 md:text-center text-left text-black">
           Layanan Internal
         </h2>
 
-        <div className="flex flex-wrap justify-center items-center gap-6">
+        <div className="flex flex-wrap md:justify-center items-center gap-6">
           {services.map((s: any) => (
             <Card key={s.id}>
               <button

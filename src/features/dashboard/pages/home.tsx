@@ -169,8 +169,7 @@ const useNews = () => {
 const Hero = ({ theme }: any) => {
 
   const dataHero = [
-     { title: "Selamat Datang di Sekolah Berprestasi dan Berkarakter", subTitle: "SMA Negeri 25 Jakarta adalah tempat di mana Anda akan menemukan pengalaman belajar terbaik, didukung oleh guru profesional, fasilitas lengkap, dan lingkungan yang inspiratif. Bersama kami, mari wujudkan masa depan gemilang.", img: "/hero1.png" },
-     { title: "Bangun Masa Depan Cemerlang Bersama SMA Negeri 25 Jakarta", subTitle: "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.", img: "/hero2.png" },
+     { title: "Sekolah Berprestasi dan Berkarakter", subTitle: "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.", img: "/hero2.png" },
   ]
   // HeroSlider sederhana mirip referensi, menggunakan data API
   const { data: heroSlides = [], isPending } = useHeroSlides();
@@ -189,18 +188,18 @@ const Hero = ({ theme }: any) => {
   // const slide = dataHero[index];
 
   return (
-    <div className="relative h-[85vh] overflow-hidden" {...handlers}>
+    <div className="relative h-[80vh] md:h-[85vh] overflow-hidden" {...handlers}>
       {
         dataHero.map((d: any, i: number) => (
           <div key={i}>
             <SafeImage src={`${d.img}`} alt={d.title} className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-gray-900/80" />
-            <div className="absolute mt-[-20px] w-full mx-auto h-full flex flex-col text-center items-center justify-center text-white">
-              <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} className="text-center w-full h-full flex flex-col justify-center items-center">
-                <h1 className="text-3xl md:text-6xl w-[80%] font-bold relative">{d.title}</h1>
-                <p className="mt-6 text-md md:text-lg max-w-3xl text-gray-400">{d.subTitle}</p>
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/60" />
+            <div className="absolute md:px-0 px-5 mt-[-20px] w-full mx-auto h-full flex flex-col text-left md:text-center md:items-center md:justify-center text-white">
+              <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} className="text-left md:text-center w-full h-full flex flex-col justify-center items-center leading-loose">
+                <h1 className="text-3xl md:text-6xl md:w-[80%] leading-[30px] h-max font-bold relative">{d.title}</h1>
+                <p className="mt-6 text-md md:text-lg md:max-w-3xl text-gray-400">{d.subTitle}</p>
                 <div className="mt-8 flex gap-4 w-full items-center justify-center">
-                  <a href={"#keunggulan"} className="px-8 py-4 rounded-full font-semibold text-white bg-blue-500 shadow-lg">{"Telusuri Sekarang"}</a>
+                  <a href={"#keunggulan"} className="md:w-max w-full px-8 py-4 rounded-md md:rounded-md font-semibold text-white bg-blue-500 shadow-lg">{"Telusuri Sekarang"}</a>
                   {/* <a href={d.cta2.href} className="px-8 py-4 rounded-full font-semibold border-2 border-white">{d.cta2.label}</a> */}
                 </div>
               </motion.div>
@@ -222,12 +221,12 @@ const KeunggulanSection = ({ theme }: any) => {
   return (
     <section className="relative mt-[-60px]" id="keunggulan">
       <div className="max-w-7xl mx-auto px-6">
-        {/* <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: 'black' }}>Keunggulan Kami</h2> */}
+        {/* <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>Keunggulan Kami</h2> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {keunggulan.map((item, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                        className="bg-white flex items-center justify-start flex-col rounded-xl shadow-lg p-8 hover:shadow-2xl transition-shadow text-center">
-              <img src={item.icon} alt="icon" className="w-16 h-16 mb-4" />
+                        className="bg-white flex md:items-center justify-start flex-col rounded-xl shadow-lg p-5 md:p-8 hover:shadow-2xl transition-shadow text-left md:text-center">
+              <img src={item.icon} alt="icon" className="w-10 md:w-16 h-10 md:h-16 mb-4" />
               <h3 className="text-2xl font-semibold mb-4" style={{ color: 'black' }}>{item.title}</h3>
               <p className="text-gray-600">{item.description}</p>
             </motion.div>
@@ -242,7 +241,7 @@ const SambutanSection = ({ theme }: any) => {
   const [sambutanQuery] = useSambutanAndHeadmasters();
   const sambutan = sambutanQuery.data;
 
-  if (sambutanQuery.isPending) return <div className="py-24 text-center">Loading sambutan...</div>;
+  if (sambutanQuery.isPending) return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
 
   // Stats hardcoded sesuai screenshot (ganti dengan data API jika ada)
   const stats = [
@@ -255,11 +254,11 @@ const SambutanSection = ({ theme }: any) => {
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: 'black' }}>
+        <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>
           Sambutan Kepala Sekolah
         </h2>
 
-        <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-center">
+        <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
           {/* Bagian Kiri: Foto + Logo Sekolah */}
           <div className="relative">
             {/* Papan nama kecil di pojok kiri atas */}
@@ -290,7 +289,7 @@ const SambutanSection = ({ theme }: any) => {
                 <p key={i}>{p}</p>
               ))}
             </div> */}
-            <p className="text-lg text-gray-700 leading-relaxed space-y-4 w-[80%] mx-auto text-center">
+            <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
               Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
             </p>
 
@@ -301,10 +300,10 @@ const SambutanSection = ({ theme }: any) => {
             </div>
 
             {/* Stats Box */}
-            <div className="grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
               {stats.map((stat, i) => (
-                <div key={i} className="text-center gap-3 w-full flex items-center justify-center">
-                  <p className="text-4xl md:text-5xl font-bold" style={{ color: 'black' }}>
+                <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center">
+                  <p className="text-3xl md:text-5xl font-bold" style={{ color: 'black' }}>
                     {stat.value}
                   </p>
                   <p className="text-gray-600">{stat.label}</p>
@@ -338,11 +337,11 @@ const FasilitasSection = ({ theme }: any) => {
         <motion.h2 
           initial={{ opacity: 0, y: -30 }} 
           whileInView={{ opacity: 1, y: 0 }} 
-          className="text-4xl md:text-5xl font-bold text-center" 
+          className="text-3xl md:text-5xl font-bold text-left md:text-center" 
           style={{ color: 'black' }}>
           Fasilitas Sekolah Kami
         </motion.h2>
-        <p className="text-xs mb-16 text-center mx-auto mt-3 text-gray-500">(Gambar hanyalah ilustrasi)</p>
+        <p className="text-xs mb-16 text-left md:text-center mx-auto mt-3 text-gray-500">(Gambar hanyalah ilustrasi)</p>
 
         {/* Masonry grid responsif (2-4 kolom) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-auto">
@@ -388,11 +387,11 @@ const PengurusSection = ({ theme }: any) => {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: 'black' }}>Pengurus Sekolah</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>Pengurus Sekolah</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {pengurus.map((item, i) => (
-            <div key={i} className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-md p-6 text-center border border-blue-100 hover:shadow-xl transition-shadow">
-              <img src={item.img} alt="photo" />
+            <div key={i} className="bg-gradient-to-br from-blue-50 w-full to-white rounded-xl shadow-md p-4 md:p-6 text-left md:text-center border border-gray-500 md:border-blue-100 hover:shadow-xl transition-shadow">
+              <img src={item.img} alt="photo" className="w-full bg-cover" />
               <h3 className="font-semibold text-lg mt-6 mb-2" style={{ color: 'black' }}>{'Pengajar'}</h3>
               <p className="text-gray-700">{'SMAN 25 Jakarta'}</p>
             </div>
@@ -405,7 +404,7 @@ const PengurusSection = ({ theme }: any) => {
 
 const BeritaSection = ({ theme }: any) => {
   const { data: items = [], isPending } = useNews();
-  if (isPending) return <div className="py-16 text-center">Loading berita...</div>;
+  if (isPending) return <div className="py-16 text-left md:text-center">Loading berita...</div>;
 
   return (
     <section className="py-16 bg-gradient-to-b from-purple-50 to-white">
@@ -440,10 +439,10 @@ const VideoSection = ({ theme }: any) => {
     <section className="py-6">
       <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
         <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
-          className="text-7xl md:text-5xl text-black font-bold text-center">
+          className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
           Kegiatan Sekolah dalam Video
         </motion.h2>
-        <p className="text-center w-full mb-12 text-gray-500 mt-5">Kegiatan Senam Pagi SMAN 25 Jakarta – Jumat, 7 Juni 2024</p>
+        <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">Kegiatan Senam Pagi SMAN 25 Jakarta – Jumat, 7 Juni 2024</p>
 
         <div className="max-w-7xl mx-auto">
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
@@ -509,7 +508,7 @@ const InstagramFeedSection = ({ theme }: any) => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-center mb-12"
+          className="text-3xl md:text-5xl font-bold text-left md:text-center mb-12"
           style={{ color: theme.primaryText }}
         >
           Kegiatan Terbaru di Media Sosial

@@ -96,7 +96,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[85vh] flex items-center justify-center overflow-hidden z-[1]">
       {/* Background Image - Gedung SMA di Jakarta (mirip SMAN 25) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -109,7 +109,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Content */}
-      <div className="relative z-10 -mt-6 text-center text-white px-6 max-w-4xl">
+      <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -211,7 +211,7 @@ const Modal = ({ open, onClose, theme, title, children }: any) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] mt-14 flex items-center justify-center p-4"
     >
       <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.45)" }} onClick={onClose} />
       <motion.div
@@ -307,10 +307,10 @@ const EkskulSection = ({ theme, schoolName }: any) => {
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10"
+          className="md:text-center text-left mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-black">
-            Ekstrakurikuler {schoolName}
+            Ekstrakurikuler 
           </h2>
           <p className="mt-3 text-lg text-black/80">
             Kegiatan pengembangan minat dan bakat siswa
@@ -318,7 +318,7 @@ const EkskulSection = ({ theme, schoolName }: any) => {
         </motion.div>
 
         {error && (
-          <div className="text-center py-4 text-red-600">
+          <div className="md:text-center text-left py-4 text-red-600">
             Gagal memuat data dari server. Menggunakan data demo.
           </div>
         )}
@@ -367,7 +367,7 @@ const EkskulSection = ({ theme, schoolName }: any) => {
             ))}
           </motion.div>
         ) : (
-          <div className="text-center py-20 text-black/60">
+          <div className="md:text-center text-left py-20 text-black/60">
             Tidak ada ekstrakurikuler yang sesuai dengan filter.
           </div>
         )}
@@ -375,41 +375,41 @@ const EkskulSection = ({ theme, schoolName }: any) => {
         {/* Modal Detail */}
         <Modal open={!!selected} onClose={() => setSelected(null)} theme={theme} title={selected?.name}>
           {selected && (
-            <>
-              <img src={selected.img} alt={selected.name} className="w-full h-64 object-cover rounded-xl mb-6" />
-              <div className="flex flex-wrap gap-2 mb-4">
+            <div>
+              <img src={selected.img} alt={selected.name} className="w-full h-40 object-cover rounded-xl mb-6" />
+              {/* <div className="flex flex-wrap gap-2 mb-4">
                 <Chip theme={theme}>{selected.category}</Chip>
                 <Chip theme={theme}>{selected.day}</Chip>
                 <Chip theme={theme}>{selected.time}</Chip>
                 <Chip theme={theme}>{selected.room}</Chip>
                 <Chip theme={theme}>{selected.members}/{selected.quota} anggota</Chip>
-              </div>
-              <p className="text-base mb-6 leading-relaxed">{selected.desc}</p>
-              {selected.achievements?.length > 0 && (
+              </div> */}
+              <p className="text-base mb-6 leading-relaxed text-black">{selected.desc}</p>
+              {/* {selected.achievements?.length > 0 && (
                 <div className="mb-6">
                   <h4 className="font-semibold mb-2">Prestasi</h4>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     {selected.achievements.map((a: string, i: number) => <li key={i}>{a}</li>)}
                   </ul>
                 </div>
-              )}
-              <p className="text-sm mb-6">Pembina: <strong>{selected.coach}</strong></p>
+              )} */}
+              {/* <p className="text-sm mb-6">Pembina: <strong>{selected.coach}</strong></p>
               <div className="text-sm space-y-2">
                 <p>📞 Telepon: <a href="tel:(021)6331921" className="underline">(021) 6331921</a></p>
                 <p>✉️ Email: <a href="mailto:info@sman25-jkt.sch.id" className="underline">info@sman25-jkt.sch.id</a></p>
-              </div>
+              </div> */}
               <div className="flex gap-4 mt-8">
-                <button
+                {/* <button
                   onClick={() => alert("Pendaftaran akan segera dibuka. Hubungi pembina untuk info lebih lanjut.")}
                   className="flex-1 py-3 bg-black text-white rounded-xl font-semibold"
                 >
                   Daftar Sekarang
-                </button>
-                <button onClick={() => setSelected(null)} className="px-6 py-3 border border-black/20 rounded-xl">
+                </button> */}
+                {/* <button onClick={() => setSelected(null)} className="px-6 py-3 border border-black/20 rounded-xl">
                   Tutup
-                </button>
+                </button> */}
               </div>
-            </>
+            </div>
           )}
         </Modal>
       </div>
@@ -429,7 +429,7 @@ const EkskulPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavbarComp theme={theme} />
       <HeroSection />
-      <main className="flex-1 -mt-12 relative z-10">
+      <main className="flex-1 -mt-12 relative z-[1]">
         <EkskulSection theme={theme} schoolName={schoolName} />
       </main>
       <FooterComp theme={theme} />

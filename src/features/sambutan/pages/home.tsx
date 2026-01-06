@@ -43,7 +43,7 @@
 //   const [sambutanQuery] = useSambutanAndHeadmasters();
 //   const sambutan = sambutanQuery.data;
 
-//   if (sambutanQuery.isPending) return <div className="py-24 text-center">Loading sambutan...</div>;
+//   if (sambutanQuery.isPending) return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
 
 //   // Stats hardcoded sesuai screenshot (ganti dengan data API jika ada)
 //   const stats = [
@@ -56,7 +56,7 @@
 //   return (
 //     <section className="py-16 md:py-16 bg-white">
 //       <div className="max-w-7xl mx-auto px-6">
-//         <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-center">
+//         <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
 //           {/* Bagian Kiri: Foto + Logo Sekolah */}
 //           <div className="relative">
 //             {/* Papan nama kecil di pojok kiri atas */}
@@ -87,7 +87,7 @@
 //                 <p key={i}>{p}</p>
 //               ))}
 //             </div> */}
-//             <p className="text-lg text-gray-700 leading-relaxed space-y-4 w-[80%] mx-auto text-center">
+//             <p className="text-lg text-gray-700 leading-relaxed space-y-4 w-[80%] mx-auto text-left md:text-center">
 //               Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
 //             </p>
 
@@ -100,7 +100,7 @@
 //             {/* Stats Box */}
 //             <div className="grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
 //               {stats.map((stat, i) => (
-//                 <div key={i} className="text-center gap-3 w-full flex items-center justify-center">
+//                 <div key={i} className= text-left"md:text-center gap-3 w-full flex items-center justify-center">
 //                   <p className="text-4xl md:text-5xl font-bold" style={{ color: 'black' }}>
 //                     {stat.value}
 //                   </p>
@@ -168,12 +168,12 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden z-[1]">
       {/* Background Image - Foto Gedung SMAN 25 Jakarta (asli dari Facebook Alumni) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('/hero1.png')`,
+          backgroundImage: `url('/hero2.png')`,
         }}
       />
 
@@ -181,7 +181,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-6 mt-[-100px] max-w-5xl">
+      <div className="relative z-10 text-left md:text-center text-white px-6 mt-[-60px] max-w-5xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -207,7 +207,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.4 }}
           onClick={scrollToSambutan}
-          className="px-10 py-4 rounded-xl bg-white text-black font-bold text-lg hover:bg-gray-100 transition shadow-xl"
+          className="px-6 py-3 rounded-xl bg-white text-black font-medium text-lg hover:bg-gray-100 transition shadow-xl"
         >
           Baca Sambutan Lengkap
         </motion.button>
@@ -285,7 +285,7 @@ const SambutanSection = ({ theme }: any) => {
   const [sambutanQuery] = useSambutanAndHeadmasters();
   const sambutan = sambutanQuery.data;
 
-  if (sambutanQuery.isPending) return <div className="py-24 text-center">Loading sambutan...</div>;
+  if (sambutanQuery.isPending) return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
 
   // Stats hardcoded sesuai screenshot (ganti dengan data API jika ada)
   const stats = [
@@ -296,9 +296,9 @@ const SambutanSection = ({ theme }: any) => {
   ];
 
   return (
-    <section className="py-16 md:py-16 bg-white">
+    <section id="sambutan" className="py-16 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-center">
+        <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
           {/* Bagian Kiri: Foto + Logo Sekolah */}
           <div className="relative">
             {/* Papan nama kecil di pojok kiri atas */}
@@ -329,7 +329,7 @@ const SambutanSection = ({ theme }: any) => {
                 <p key={i}>{p}</p>
               ))}
             </div> */}
-            <p className="text-lg text-gray-700 leading-relaxed space-y-4 w-[80%] mx-auto text-center">
+            <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
               Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
             </p>
 
@@ -340,9 +340,9 @@ const SambutanSection = ({ theme }: any) => {
             </div>
 
             {/* Stats Box */}
-            <div className="grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
               {stats.map((stat, i) => (
-                <div key={i} className="text-center gap-3 w-full flex items-center justify-center">
+                <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center">
                   <p className="text-4xl md:text-5xl font-bold" style={{ color: 'black' }}>
                     {stat.value}
                   </p>
@@ -375,7 +375,7 @@ const SambutanPage = () => {
       <HeroSection />
 
       {/* Main Content dengan overlap sedikit ke hero */}
-      <main className="flex-1 -mt-20 relative z-10">
+      <main className="flex-1 -mt-20 relative z-[1]">
         <SambutanSection />
       </main>
 

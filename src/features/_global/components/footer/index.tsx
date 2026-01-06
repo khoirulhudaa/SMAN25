@@ -124,20 +124,13 @@ if (typeof document !== "undefined") {
 export const FooterComp = ({ theme }) => {
   const themeKey = getThemeKey();
   const safeTheme = THEMES[themeKey] || THEMES.default;
-  const now = new Date().getFullYear();
-  const from = Number.isFinite(SITE_SINCE) ? SITE_SINCE : now;
-  const yearLabel = from < now ? `${from} — ${now}` : `${now}`;
-
-  // Determine logo number
-  const logoNumber = themeKey === "smkn13" ? "13" : themeKey.replace("sman", "");
-
   // Determine school type for subtitle
   const schoolType = themeKey === "smkn13" ? "Sekolah Menengah Kejuruan Negeri" : "Sekolah Menengah Atas Negeri";
 
   return (
     <footer className="mt-8">
       <div
-        className="w-full bg-blue-500 mx-auto px-32 py-10 border-t"
+        className="w-full bg-blue-500 mx-auto px-5 md:px-32 py-10 border-t"
         style={{ borderColor: safeTheme.subtle }}
       >
         <div className="grid md:grid-cols-4 gap-6">

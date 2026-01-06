@@ -216,7 +216,7 @@
 //       </a>
 
 //       <section id="osis" className="py-16 text-[15px] md:text-[17px] leading-relaxed">
-//         <div className="max-w-5xl mx-auto px-4 text-center">
+//         <div className="max-w-5xl mx-auto px-4 md:text-center text-left">
 //           <motion.h2
 //             initial={{ opacity: 0, y: 12 }}
 //             whileInView={{ opacity: 1, y: 0 }}
@@ -442,7 +442,7 @@
 //                 </p>
 //               </motion.div>
 //             )) || (
-//               <p className="text-sm opacity-90 mt-4 text-center w-full" style={{ color: theme.surfaceText }}>
+//               <p className="text-sm opacity-90 mt-4 md:text-center text-left w-full" style={{ color: theme.surfaceText }}>
 //                 Belum ada prestasi yang tercatat.
 //               </p>
 //             )}
@@ -559,7 +559,7 @@
 //             <button onClick={prev} aria-label="Foto sebelumnya" className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-yellow-300" style={{ borderColor: theme.subtle, color: "#fff" }}>‹</button>
 //             <img src={galeri[idx].src} alt={galeri[idx].alt} className="max-h-[80vh] max-w-[92vw] object-contain rounded-xl border" style={{ borderColor: theme.subtle }} />
 //             <button onClick={next} aria-label="Foto berikutnya" className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-yellow-300" style={{ borderColor: theme.subtle, color: "#fff" }}>›</button>
-//             <div className="absolute bottom-6 left-0 right-0 text-center text-xs" aria-live="polite">
+//             <div className="absolute bottom-6 left-0 right-0 md:text-center text-left text-xs" aria-live="polite">
 //               <span style={{ color: "#fff" }}>{idx + 1} / {galeri.length} — {galeri[idx].alt}</span>
 //             </div>
 //           </div>
@@ -592,7 +592,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[78vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[78vh] flex items-center justify-center overflow-hidden z-[1]">
       {/* Background Image - Gedung SMAN 25 Jakarta (foto resmi dari sumber terpercaya) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -604,7 +604,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-6 max-w-5xl">
+      <div className="relative z-10 md:text-center text-left text-white mt-10 px-6 max-w-5xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -830,7 +830,7 @@ const OsisPage = () => {
       <HeroSection />
 
       {/* KONTEN UTAMA */}
-      <section id="osis-content" className="py-20 md:py-32 -mt-20 relative z-10 bg-gradient-to-b from-transparent to-theme-bg/50">
+      <section id="osis-content" className="py-20 md:py-32 -mt-20 relative z-10 bg-gradient-to-b from-transparent to-theme-bg/50 z-[1]">
         <div className="max-w-6xl mx-auto px-6">
 
           {/* Struktur Organisasi Aktif */}
@@ -838,10 +838,11 @@ const OsisPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="md:text-center text-left mb-16"
           >
-            <h3 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: theme.primaryText }}>
-              Struktur Organisasi — {HISTORY.find(h => h.status === 'Berjalan')?.periode || "Tahun Berjalan"}
+            <h3 className="text-3xl md:text-4xl font-bold mb-4 mt-12" style={{ color: theme.primaryText }}>
+              Struktur Organisasi 
+              {/* — {HISTORY.find(h => h.status === 'Berjalan')?.periode || "Tahun Berjalan"} */}
             </h3>
             <p className="text-base opacity-70" style={{ color: theme.surfaceText }}>
               Periode aktif saat ini
@@ -860,7 +861,7 @@ const OsisPage = () => {
                 className="group relative bg-white/70 dark:bg-gray-900/70 backdrop-blur-md rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-white/20"
                 tabIndex={0}
               >
-                <div className="p-8 flex flex-col items-center text-center">
+                <div className="p-8 flex flex-col items-center md:text-center text-left">
                   <div className="w-36 h-36 mb-6 rounded-full overflow-hidden ring-4 ring-theme-accent/30">
                     <img
                       src={s.foto}
@@ -890,10 +891,10 @@ const OsisPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="md:text-center text-left mb-12"
           >
             <h3 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: theme.primaryText }}>
-              Riwayat Kepengurusan OSIS
+              Riwayat
             </h3>
             <div className="flex flex-wrap justify-center gap-4">
               {years.map((y, i) => (
@@ -922,7 +923,7 @@ const OsisPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-24"
           >
-            <p className="text-center text-lg mb-10 opacity-80" style={{ color: theme.surfaceText }}>
+            <p className="md:text-center text-left text-lg mb-10 opacity-80" style={{ color: theme.surfaceText }}>
               Periode {current?.periode} — <span className="font-medium italic">{current?.status}</span>
             </p>
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -933,7 +934,7 @@ const OsisPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: prefersReducedMotion ? 0 : -6 }}
-                  className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border border-white/10 text-center"
+                  className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all border border-white/10 md:text-center text-left"
                 >
                   <img
                     src={p.foto}
@@ -954,7 +955,7 @@ const OsisPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            className="text-3xl md:text-4xl font-bold md:text-center text-left mb-12"
             style={{ color: theme.primaryText }}
           >
             Visi & Misi OSIS
@@ -963,7 +964,7 @@ const OsisPage = () => {
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-10 shadow-xl border border-white/20"
+              className="bg-white backdrop-blur-md rounded-3xl p-4 md:p-10 shadow-xl border border-white/20"
             >
               <h4 className="text-2xl font-bold mb-6" style={{ color: 'black' }}>Visi</h4>
               <p className="text-lg leading-relaxed opacity-90" style={{ color: theme.primaryText }}>
@@ -973,7 +974,7 @@ const OsisPage = () => {
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-10 shadow-xl border border-white/20"
+              className="bg-white backdrop-blur-md rounded-3xl p-4 md:p-10 shadow-xl border border-white/20"
             >
               <h4 className="text-2xl font-bold mb-6" style={{ color: 'black' }}>Misi</h4>
               <ul className="space-y-4 text-lg opacity-90 list-disc list-inside" style={{ color: theme.primaryText }}>
@@ -989,7 +990,7 @@ const OsisPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            className="text-3xl md:text-4xl font-bold md:text-center text-left mb-12"
             style={{ color: theme.primaryText }}
           >
             Prestasi OSIS
@@ -1012,14 +1013,14 @@ const OsisPage = () => {
                 </p>
               </motion.div>
             )) : (
-              <p className="col-span-full text-center text-lg opacity-70 py-12" style={{ color: theme.surfaceText }}>
+              <p className="col-span-full md:text-center text-left text-lg opacity-70 py-12" style={{ color: theme.surfaceText }}>
                 Belum ada prestasi yang tercatat.
               </p>
             )}
           </div>
 
           {/* Tombol Bergabung */}
-          {/* <div className="text-center">
+          {/* <div className="md:text-center text-left">
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

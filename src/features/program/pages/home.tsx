@@ -23,14 +23,14 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Content */}
-      <div className="relative z-10 -mt-6 text-center text-white px-6 max-w-4xl">
+      <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-6xl font-bold mb-4"
         >
-          Program Sekolah SMAN 25 Jakarta
+          Program Sekolah
         </motion.h1>
 
         <motion.p
@@ -87,10 +87,10 @@ const ProgramSekolahPage = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold text-center mb-16"
+            className="text-3xl md:text-4xl font-bold md:text-center text-left mb-16"
             style={{ color: theme.primaryText }}
           >
-            Program Unggulan Kami
+            Program Unggulan
           </motion.h2>
 
           <div className="grid gap-16 md:grid-cols-3">
@@ -100,7 +100,7 @@ const ProgramSekolahPage = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white backdrop-blur-md rounded-3xl p-10 shadow-xl border border-white/20 text-left"
+              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
             >
               <div>
                 <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
@@ -121,7 +121,7 @@ const ProgramSekolahPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-10 shadow-xl border border-white/20 text-left"
+              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
             >
               <div>
                 <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
@@ -142,7 +142,7 @@ const ProgramSekolahPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-10 shadow-xl border border-white/20 text-left"
+              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
             >
               <div>
                 <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
@@ -164,7 +164,7 @@ const ProgramSekolahPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl mt-20 font-bold text-center mb-8"
+            className="text-3xl md:text-4xl mt-20 font-bold md:text-center text-left mb-8"
             style={{ color: theme.primaryText }}
           >
             Program Sekolah
@@ -176,7 +176,7 @@ const ProgramSekolahPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-md md:text-lg text-center max-w-full mx-auto opacity-90 leading-relaxed"
+            className="text-md md:text-lg md:text-center text-left max-w-full mx-auto opacity-90 leading-relaxed"
             style={{ color: theme.surfaceText }}
           >
             SMA Negeri 25 Jakarta memiliki berbagai program unggulan yang dirancang untuk mendukung pengembangan potensi siswa secara menyeluruh, baik di bidang akademik maupun non-akademik. Program-program ini bertujuan untuk menciptakan lulusan yang berprestasi, berkarakter, dan siap menghadapi tantangan global.
@@ -191,7 +191,7 @@ const ProgramSekolahPage = () => {
               className="relative flex flex-col items-center mt-20"
             >
               {/* Title Utama (opsional jika ingin judul di atas) */}
-              <h3 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: theme.primaryText }}>
+              <h3 className="text-3xl md:text-4xl font-bold md:text-center md:flex hidden text-left mb-12" style={{ color: theme.primaryText }}>
                 Transformasi Pembelajaran dengan Kurikulum Merdeka
               </h3>
 
@@ -236,7 +236,7 @@ const ProgramSekolahPage = () => {
               </div>
 
               {/* Deskripsi Tambahan (opsional) */}
-              <p className="mt-12 text-center text-lg md:text-xl max-w-4xl opacity-90" style={{ color: theme.surfaceText }}>
+              <p className="mt-12 md:text-center text-left text-lg md:text-xl max-w-4xl opacity-90" style={{ color: theme.surfaceText }}>
                 Kurikulum Merdeka memberikan kebebasan bagi siswa untuk belajar sesuai minat dan bakat, menciptakan pengalaman belajar yang lebih bermakna, kreatif, dan menyenangkan.
               </p>
             </motion.div>

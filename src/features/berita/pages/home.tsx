@@ -211,7 +211,7 @@
 //           <motion.div
 //             initial={{ opacity: 0 }}
 //             animate={{ opacity: 1 }}
-//             className="rounded-xl border p-4 mb-4 text-center"
+//             className="rounded-xl border p-4 mb-4 md:text-center"text-left 
 //             style={{ borderColor: theme.subtle, background: theme.surface, color: theme.pop }}
 //           >
 //             {error}
@@ -316,7 +316,7 @@
 //               ) : (
 //                 <motion.div
 //                   layout
-//                   className="col-span-full text-center text-sm opacity-80 py-8"
+//                   className="col-span-full md:text-center text-left text-sm opacity-80 py-8"
 //                   style={{ color: theme.primaryText }}
 //                 >
 //                   Tidak ada berita yang cocok.
@@ -417,7 +417,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[91vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[91vh] flex items-center justify-center overflow-hidden z-[1]">
       {/* Background Image - Gedung SMAN 25 Jakarta (foto resmi dari sumber terpercaya) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -429,14 +429,14 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 -mt-6 text-center text-white px-6 max-w-5xl">
+      <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-5xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-6xl font-bold mb-6"
         >
-          Berita Terbaru SMAN 25 Jakarta
+          Berita
         </motion.h1>
 
         <motion.p
@@ -668,7 +668,7 @@ function BeritaSection({ theme, schoolName }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="rounded-xl border p-4 mb-4 text-center bg-white"
+            className="rounded-xl border p-4 mb-4 md:text-center text-left bg-white"
           >
             <p className="text-red-600">{error}</p>
           </motion.div>
@@ -689,8 +689,9 @@ function BeritaSection({ theme, schoolName }) {
           <div className="flex gap-3">
             <select
               value={cat}
+              aria-placeholder="Pilih"
               onChange={(e) => setCat(e.target.value)}
-              className="px-4 py-3 rounded-xl text-sm border border-black/20 bg-white"
+              className="px-4 py-3 rounded-xl text-sm border text-black border-black/20 bg-white"
             >
               {categories.map((c) => (
                 <option key={c} value={c}>
@@ -701,7 +702,7 @@ function BeritaSection({ theme, schoolName }) {
             <select
               value={src}
               onChange={(e) => setSrc(e.target.value)}
-              className="px-4 py-3 rounded-xl text-sm border border-black/20 bg-white"
+              className="px-4 py-3 rounded-xl text-sm border text-black border-black/20 bg-white"
             >
               {sources.map((s) => (
                 <option key={s} value={s}>
@@ -768,7 +769,7 @@ function BeritaSection({ theme, schoolName }) {
               ) : (
                 <motion.div
                   layout
-                  className="col-span-full text-center py-16 text-black/50 text-lg"
+                  className="col-span-full md:text-center text-left py-16 text-black/50 text-lg"
                 >
                   Tidak ada berita yang cocok dengan filter saat ini.
                 </motion.div>
@@ -848,7 +849,7 @@ const BeritaPage = () => {
       <HeroSection />
 
       {/* Main content dengan sedikit overlap ke hero */}
-      <main className="flex-1 -mt-20 relative z-10">
+      <main className="flex-1 -mt-20 relative z-[1]">
         <BeritaSection theme={theme} schoolName={schoolName} />
       </main>
       

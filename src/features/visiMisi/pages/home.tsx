@@ -70,14 +70,14 @@
 //   return (
 //     <section className="py-16 bg-white">
 //       <div className="max-w-7xl mx-auto px-6">
-//         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12" style={{ color: 'black' }}>
+//         <h2 className="text-3xl md:text-4xl font-bold md:text-center text-left mb-12" style={{ color: 'black' }}>
 //           Guru dan Staf Sekolah
 //         </h2>
 //         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 //           {guruDanStaf.map((item, i) => (
 //             <div
 //               key={i}
-//               className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-md p-6 text-center border border-blue-100 hover:shadow-xl transition-shadow"
+//               className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-md p-6 md:text-center text-left border border-blue-100 hover:shadow-xl transition-shadow"
 //             >
 //               <div className="w-32 h-40 mx-auto mb-4 overflow-hidden rounded-lg">
 //                 <img
@@ -196,14 +196,14 @@
 
 //       {/* Loading */}
 //       {loading && (
-//         <div className="text-sm py-8 text-center" style={{ color: theme.surfaceText }}>
+//         <div className="text-sm py-8 md:text-center text-left" style={{ color: theme.surfaceText }}>
 //           Memuat data visi misi...
 //         </div>
 //       )}
 
 //       {/* Error */}
 //       {error && (
-//         <div className="text-sm py-8 text-center" style={{ color: theme.pop }}>
+//         <div className="text-sm py-8 md:text-center text-left" style={{ color: theme.pop }}>
 //           Error: {error.message}. Menggunakan data demo.
 //         </div>
 //       )}
@@ -353,7 +353,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden z-[1]">
       {/* Background Image - Gedung SMAN 25 Jakarta (foto resmi dari sumber terpercaya) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -365,14 +365,14 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="absolute -mt-16 z-10 text-center text-white px-6 max-w-5xl">
+      <div className="absolute -mt-16 z-10 md:text-center text-left text-white px-6 max-w-5xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-6xl font-bold mb-6"
         >
-          Visi dan Misi SMAN 25 <br /> Jakarta
+          Visi dan Misi SMAN 25 <br className="md:flex hidden" /> Jakarta
         </motion.h1>
 
         <motion.p
@@ -462,16 +462,16 @@ const PengurusSection = ({ theme }: any) => {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-black">
+        <h2 className="text-3xl md:text-4xl font-bold md:text-center text-left mb-12 text-black">
           Guru dan Staf Sekolah
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {guruDanStaf.map((item, i) => (
             <div
               key={i}
-              className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-md p-6 text-center border border-blue-100 hover:shadow-xl transition-shadow"
+              className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-md p-4 md:p-6 md:text-center text-left border border-blue-100 hover:shadow-xl transition-shadow"
             >
-              <div className="w-32 h-40 mx-auto mb-4 overflow-hidden rounded-lg">
+              <div className="w-full md:w-32 h-max md:h-40 mx-auto mb-4 overflow-hidden rounded-lg">
                 <img
                   src={item.img}
                   alt={item.nama}
@@ -577,10 +577,10 @@ const VisiMisi = ({ theme, schoolName }: { theme: any; schoolName: string }) => 
     <div id="visi-misi" className="relative bg-gray-50 pt-8">
       {/* Loading & Error */}
       {loading && (
-        <div className="text-center py-12 text-black/60">Memuat data visi misi...</div>
+        <div className="md:text-center text-left py-12 text-black/60">Memuat data visi misi...</div>
       )}
       {error && (
-        <div className="text-center py-12 text-red-600">Error memuat data. Menggunakan data demo.</div>
+        <div className="md:text-center text-left py-12 text-red-600">Error memuat data. Menggunakan data demo.</div>
       )}
 
       {/* Visi */}
@@ -636,7 +636,7 @@ const VisiMisiPage = () => {
       <HeroSection />
 
       {/* Content dengan overlap ke hero */}
-      <main className="flex-1 -mt-20 relative z-10">
+      <main className="flex-1 -mt-20 relative z-[1]">
         <VisiMisi theme={theme} schoolName={schoolName} />
       </main>
 

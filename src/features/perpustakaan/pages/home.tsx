@@ -82,12 +82,12 @@ const HeroSection = () => {
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
-      <div className="relative z-[1]text-center text-white px-6 max-w-5xl -mt-10 mx-auto">
+      <div className="relative z-[1] text-left md:text-center text-white px-6 max-w-5xl -mt-10 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
-          className="flex flex-col items-center"
+          className="flex flex-col md:items-center"
         >
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 drop-shadow-2xl">
             Perpustakaan Digital
@@ -102,7 +102,7 @@ const HeroSection = () => {
             onClick={scrollToLibrary}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-10 py-4 rounded-2xl bg-white text-gray-900 font-bold text-lg shadow-2xl hover:shadow-3xl flex items-center gap-3"
+            className="px-5 md:px-10 py-4 rounded-2xl bg-white text-gray-900 font-bold text-lg shadow-2xl hover:shadow-3xl flex items-center gap-3"
           >
             Cari Buku Sekarang
           </motion.button>
@@ -113,7 +113,7 @@ const HeroSection = () => {
 };
 
 const ShelfCard = ({ book, theme, onRead }) => (
-  <motion.div layout whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="rounded-xl h-[500px] overflow-hidden shrink-0 w-full" style={{background: theme.surface }}>
+  <motion.div layout whileHover={{ y: -4 }} whileTap={{ scale: 0.99 }} className="rounded-xl md:h-[500px] overflow-hidden shrink-0 w-full" style={{background: theme.surface }}>
     <div className="w-full" style={{ aspectRatio: '3 / 4', background: theme.subtle }}>
       <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
     </div>
@@ -362,7 +362,7 @@ const handleInputChange = (e) => {
 
       <div className="max-w-7xl mx-auto px-4 mt-12">
         <div className="w-full mb-10 flex items-center justify-between">
-          <div className="w-full items-center flex flex-col justify-center gap-4 mb-4">
+          <div className="w-full md:items-center flex flex-col md:justify-center gap-4 mb-4">
             <h2
               className="text-2xl md:text-3xl font-bold"
               style={{ color: 'black' }}
@@ -393,7 +393,7 @@ const handleInputChange = (e) => {
           {/* Scroller pages */}
           <div
             ref={scrollerRef}
-            className="w-full grid grid-cols-4 gap-4 overflow-x-auto"
+            className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 overflow-x-auto"
             style={{ scrollBehavior: "smooth" }}
           >
             {pages.map((page, pIdx) => (

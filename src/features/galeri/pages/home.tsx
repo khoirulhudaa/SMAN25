@@ -249,7 +249,7 @@
 //               </motion.div>
 //             </AnimatePresence>
 //           ) : (
-//             <div className="text-center p-8">
+//             <div className="md:text-center text-left p-8">
 //               <Camera className="w-16 h-16 mx-auto mb-4 opacity-30" />
 //               <p className="text-lg font-medium" style={{ color: theme.primaryText }}>Album kosong</p>
 //               <p className="text-sm mt-2 opacity-70" style={{ color: theme.surfaceText }}>Belum ada foto atau video.</p>
@@ -451,7 +451,7 @@
 //       </div>
 
 //       <div className="p-3">
-//         <span className="block w-full mt-2 px-4 py-2 rounded-lg text-sm font-medium text-center border" style={{
+//         <span className="block w-full mt-2 px-4 py-2 rounded-lg text-sm font-medium md:text-center text-left border" style={{
 //           background: theme.accent,
 //           color: "#111827",
 //           borderColor: theme.accent,
@@ -500,7 +500,7 @@
 //   if (loading) {
 //     return (
 //       <section id="galeri" className="py-12 md:py-16">
-//         <div className="max-w-6xl mx-auto px-4 text-center">
+//         <div className="max-w-6xl mx-auto px-4 md:text-center text-left">
 //           <p style={{ color: theme.primaryText }}>Memuat album...</p>
 //         </div>
 //       </section>
@@ -510,7 +510,7 @@
 //   if (error && albums.length === 0) {
 //     return (
 //       <section id="galeri" className="py-12 md:py-16">
-//         <div className="max-w-6xl mx-auto px-4 text-center">
+//         <div className="max-w-6xl mx-auto px-4 md:text-center text-left">
 //           {/* <p className="text-red-400">Gagal memuat: {error}</p> */}
 //           <p className="text-sm mt-2" style={{ color: theme.surfaceText }}>Data tidak tersedia</p>
 //         </div>
@@ -575,7 +575,7 @@
 
 //         {selectedAlbum && !loadingItems && items.length === 0 && (
 //           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={closeAlbum}>
-//             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-sm text-center">
+//             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-sm md:text-center text-left">
 //               <Camera className="w-16 h-16 mx-auto mb-4 text-gray-400" />
 //               <p className="font-medium">Album kosong</p>
 //               <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">Belum ada foto di album ini.</p>
@@ -642,7 +642,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
+      <div className="relative z-10 md:text-center text-left text-white px-6 max-w-5xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -816,10 +816,10 @@ const GalleryPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="md:text-center text-left mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: theme.primaryText }}>
-              Galeri {schoolName}
+              Galeri Sekolah
             </h2>
             <p className="text-lg opacity-80 max-w-3xl mx-auto" style={{ color: theme.surfaceText }}>
               Koleksi foto kegiatan siswa, guru, dan sekolah sepanjang tahun ajaran.
@@ -827,7 +827,7 @@ const GalleryPage = () => {
           </motion.div>
 
           {loading ? (
-            <div className="text-center py-20">
+            <div className="md:text-center text-left py-20">
               <p className="text-lg" style={{ color: theme.primaryText }}>Memuat album...</p>
             </div>
           ) : (

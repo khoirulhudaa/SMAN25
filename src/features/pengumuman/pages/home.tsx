@@ -393,7 +393,7 @@
 //           <motion.div
 //             initial={{ opacity: 0 }}
 //             animate={{ opacity: 1 }}
-//             className="rounded-xl border p-4 mb-4 text-center"
+//             className="rounded-xl border p-4 mb-4 md:text-center text-left"
 //             style={{ borderColor: theme.subtle, background: theme.surface, color: theme.pop }}
 //           >
 //             {error}
@@ -430,7 +430,7 @@
 //               ) : (
 //                 <motion.div
 //                   layout
-//                   className="col-span-full text-center text-sm opacity-80"
+//                   className="col-span-full md:text-center text-left text-sm opacity-80"
 //                   style={{ color: theme.primaryText }}
 //                 >
 //                   Tidak ada pengumuman yang tersedia
@@ -507,7 +507,7 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&auto=format&fit=crop&q=80')`,
+          backgroundImage: `url('/kgp4.jpeg')`,
         }}
       />
 
@@ -515,7 +515,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 -mt-6 text-center text-white px-6 max-w-4xl">
+      <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -864,7 +864,7 @@ function AnnouncementsSection({ schoolName }: { schoolName: string }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="md:text-center text-left mb-12"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-black mb-4">
             Pengumuman Terbaru
@@ -875,7 +875,7 @@ function AnnouncementsSection({ schoolName }: { schoolName: string }) {
         </motion.div>
 
         {/* Feed Download Links */}
-        <div className="text-center mb-8">
+        <div className="md:text-center text-left mb-8">
           <div className="inline-flex items-center gap-4 bg-white/80 backdrop-blur rounded-xl px-6 py-3 border border-black/10">
             <a
               href={jsonUrl || "#"}
@@ -891,7 +891,7 @@ function AnnouncementsSection({ schoolName }: { schoolName: string }) {
             <a
               href={rssUrl || "#"}
               download={`pengumuman-${new Date().toISOString().slice(0, 10)}.xml`}
-              className="text-sm font-medium text-black hover:underline"
+              className="md:flex hidden text-sm font-medium text-black hover:underline"
             >
               Download RSS
             </a>
@@ -902,7 +902,7 @@ function AnnouncementsSection({ schoolName }: { schoolName: string }) {
         </div>
 
         {error && (
-          <div className="text-center py-6 text-red-600 font-medium">
+          <div className="md:text-center text-left py-6 text-red-600 font-medium">
             {error}
           </div>
         )}
@@ -934,7 +934,7 @@ function AnnouncementsSection({ schoolName }: { schoolName: string }) {
                   <AnnouncementCard key={item.id} item={item} />
                 ))
               ) : (
-                <div className="col-span-full text-center py-16 text-black/50 text-lg">
+                <div className="col-span-full md:text-center text-left py-16 text-black/50 text-lg">
                   Tidak ada pengumuman yang sesuai dengan pencarian atau filter saat ini.
                 </div>
               )}
