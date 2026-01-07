@@ -214,7 +214,7 @@ export const FooterComp = ({ theme }) => {
             className="text-sm opacity-80"
             style={{ color: safeTheme.primaryText }}
           >
-            © 2026 — {safeTheme.name}. All rights reserved.
+            © 2026 — SMAN 25 JAKARTA. All rights reserved.
           </div>
           <div
             className="text-xs"
