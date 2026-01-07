@@ -50,7 +50,6 @@ const useOnClickOutside = (ref, handler) => {
 // === DATA NAVIGASI ===
 const NAV = [
   // { label: "Beranda", href: "/dashboard" },
-  // { label: "Pramuka", href: "/pramuka" },
   {
     label: "Profil Sekolah",
     children: [
@@ -58,19 +57,19 @@ const NAV = [
       { label: "Sambutan", href: "/sambutan" },
       { label: "Visi & Misi", href: "/visiMisi" },
       { label: "Galeri", href: "/galeri" },
-      // { label: "Sejarah", href: "/sejarah" },
-      // { label: "Struktur", href: "/struktur" },
+      { label: "Sejarah", href: "/sejarah" },
+      { label: "Struktur", href: "/struktur" },
     ],
   },
-  // {
-    //   label: "Akademik",
-    //   children: [
-      //     { label: "Kurikulum", href: "/kurikulum" },
-  //     { label: "Kalender", href: "/kalender" },
-  //     { label: "Jadwal", href: "/jadwal" },
-  //     { label: "Guru & Tendik", href: "/guru-tendik" },
-  //   ],
-  // },
+  {
+      label: "Akademik",
+      children: [
+          { label: "Kurikulum", href: "/kurikulum" },
+      { label: "Kalender", href: "/kalender" },
+      { label: "Jadwal", href: "/jadwal" },
+      { label: "Guru & Tendik", href: "/guru-tendik" },
+    ],
+  },
   { label: "Program", href: "/program" },
   {
     label: "Kegiatan",
@@ -78,6 +77,7 @@ const NAV = [
       { label: "OSIS", href: "/osis" },
       { label: "Ekstrakurikuler", href: "/ekstrakulikuler" },
       { label: "Prestasi", href: "/prestasi" },
+      { label: "Pramuka", href: "/pramuka" },
     ],
   },
   { label: "Perpus", href: "/perpustakaan" },
@@ -86,12 +86,12 @@ const NAV = [
     children: [
       { label: "Pengumuman", href: "/pengumuman" },
       { label: "Berita", href: "/berita" },
-      // { label: "Agenda", href: "/agenda" },
-      // { label: "Buku Alumni", href: "/buku-alumni" },
-      // { label: "PPDB", href: "/ppdb" },
-      // { label: "PPID", href: "/ppid" },
+      { label: "Agenda", href: "/agenda" },
+      { label: "Buku Alumni", href: "/buku-alumni" },
+      { label: "PPDB", href: "/ppdb" },
+      { label: "PPID", href: "/ppid" },
       { label: "Layanan", href: "/layanan" },
-      // { label: "Kelulusan", href: "/kelulusan" },
+      { label: "Kelulusan", href: "/kelulusan" },
     ],
   },
 ];
@@ -367,9 +367,10 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
                   25
                 </div> */}
                 <div
-                  className="text-md w-max md:text-lg font-semibold"
+                  className="flex items-center gap-3 text-md w-max md:text-lg font-semibold"
                   style={{ color: 'black' }}
                 >
+                  <img src="/logoMain.jpg" alt="logo SMAN 25 JKT" className="w-10 h-10" />
                   {safeTheme.name}
                 </div>
               </div>
