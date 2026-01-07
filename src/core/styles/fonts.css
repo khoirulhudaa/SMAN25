@@ -17,6 +17,11 @@
   font-style: normal;
 }
 
+
+H2 {
+  text-transform: uppercase;
+}
+
 .poppins-regular {
   font-family: "Poppins", sans-serif;
   font-weight: 400;

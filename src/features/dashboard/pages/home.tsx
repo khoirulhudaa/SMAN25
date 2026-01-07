@@ -6,7 +6,7 @@ import NavbarComp from "@/features/_global/components/navbar";
 import { queryClient } from "@/features/_root/queryClient";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
-import { Calendar, TrendingUp } from "lucide-react";
+import { Calendar, FileCheck, Thermometer, TrendingUp, UserCheck, UserX } from "lucide-react";
 import { useEffect, useState } from "react";
 
 let useSwipeable;
@@ -86,10 +86,10 @@ const useStats = () => {
       const data = await res.json();
       if (!data.success) throw new Error("Invalid response");
       return [
-        { k: "Hadir Hari Ini", v: data.data.hadirHariIni },
-        { k: "Izin/Sakit", v: data.data.izinSakit },
-        { k: "Terlambat", v: data.data.terlambat },
-        { k: "Guru Hadir", v: data.data.guruHadir },
+        { k: "HADIR", v: data.data.hadirHariIni },
+        { k: "IZIN", v: data.data.izinSakit },
+        { k: "TERLAMBAT", v: data.data.terlambat },
+        { k: "GURU HADIR", v: data.data.guruHadir },
       ];
     },
   });
@@ -169,7 +169,7 @@ const useNews = () => {
 const Hero = ({ theme }: any) => {
 
   const dataHero = [
-     { title: "Sekolah Berprestasi dan Berkarakter", subTitle: "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.", img: "/hero2.png" },
+     { title: "SEKOLAH BERPRESTASI DAN BERKARAKTER", subTitle: "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.", img: "/hero2.png" },
   ]
   // HeroSlider sederhana mirip referensi, menggunakan data API
   const { data: heroSlides = [], isPending } = useHeroSlides();
@@ -197,7 +197,7 @@ const Hero = ({ theme }: any) => {
             <div className="absolute md:px-0 px-5 mt-[-20px] w-full mx-auto h-full flex flex-col text-left md:text-center md:items-center md:justify-center text-white">
               <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} className="text-left md:text-center w-full h-full flex flex-col justify-center items-center leading-loose">
                 <h1 className="text-3xl md:text-6xl md:w-[80%] leading-[30px] h-max font-bold relative">{d.title}</h1>
-                <p className="mt-6 text-md md:text-lg md:max-w-3xl text-gray-400">{d.subTitle}</p>
+                <p className="mt-6 text-md md:text-lg md:max-w-3xl text-gray-300">{d.subTitle}</p>
                 <div className="mt-8 flex gap-4 w-full items-center justify-center">
                   <a href={"#keunggulan"} className="md:w-max w-full px-8 py-4 rounded-md md:rounded-md font-semibold text-white bg-blue-500 shadow-lg">{"Telusuri Sekarang"}</a>
                   {/* <a href={d.cta2.href} className="px-8 py-4 rounded-full font-semibold border-2 border-white">{d.cta2.label}</a> */}
@@ -219,7 +219,7 @@ const KeunggulanSection = ({ theme }: any) => {
   ];
 
   return (
-    <section className="relative mt-[-60px]" id="keunggulan">
+    <section className="relative" id="keunggulan">
       <div className="max-w-7xl mx-auto px-6">
         {/* <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>Keunggulan Kami</h2> */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -237,13 +237,13 @@ const KeunggulanSection = ({ theme }: any) => {
   );
 };
 
+
 const SambutanSection = ({ theme }: any) => {
   const [sambutanQuery] = useSambutanAndHeadmasters();
   const sambutan = sambutanQuery.data;
 
   if (sambutanQuery.isPending) return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
 
-  // Stats hardcoded sesuai screenshot (ganti dengan data API jika ada)
   const stats = [
     { value: "540 +", label: "Peserta Didik" },
     { value: "45 +", label: "Guru Tendik" },
@@ -252,19 +252,29 @@ const SambutanSection = ({ theme }: any) => {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section 
+      className="pt-10 md:pt-16 pb-16 md:pb-24 z-[1] bg-white relative overflow-hidden"
+      // Background dots yang lebih terlihat dan elegan
+      style={{
+        backgroundColor: '#ffffff',
+        backgroundImage: `
+          radial-gradient(#d1d5db 1.5px, transparent 1.5px),
+          radial-gradient(#e5e7eb 1px, transparent 1px)
+        `,
+        backgroundSize: '44px 44px, 76px 76px',
+        backgroundPosition: '0 0, 22px 22px',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>
-          Sambutan Kepala Sekolah
+          SAMBUTAN KEPALA SEKOLAH
         </h2>
 
         <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
-          {/* Bagian Kiri: Foto + Logo Sekolah */}
           <div className="relative">
-            {/* Papan nama kecil di pojok kiri atas */}
             <div className="absolute top-0 left-0 z-10 w-48 md:w-64 -translate-y-8 md:-translate-y-12 -translate-x-4 md:-translate-x-8">
               <SafeImage 
-                src="/sman25-sign.jpg" // ganti dengan foto papan nama asli jika ada
+                src="/sman25-sign.jpg"
                 alt="SMAN 25 JAKARTA" 
                 className="w-full" 
               />
@@ -273,7 +283,6 @@ const SambutanSection = ({ theme }: any) => {
             {/* Foto Kepala Sekolah */}
             <div className="relative rounded-2xl overflow-hidden">
               <SafeImage 
-                // src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/defaultKepsek.jpg"}
                 src={"/kapalaSekolah.png"}
                 alt="Kepala Sekolah" 
                 className="w-full h-[400px] md:h-[300px] object-contain" 
@@ -283,12 +292,6 @@ const SambutanSection = ({ theme }: any) => {
 
           {/* Bagian Kanan: Teks + Stats */}
           <div className="flex flex-col justify-center space-y-8">
-            {/* Teks Sambutan */}
-            {/* <div className="text-lg text-gray-700 leading-relaxed space-y-4">
-              {sambutan?.text.split("\n").map((p: string, i: number) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div> */}
             <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
               Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
             </p>
@@ -302,7 +305,7 @@ const SambutanSection = ({ theme }: any) => {
             {/* Stats Box */}
             <div className="hidden md:grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
               {stats.map((stat, i) => (
-                <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center">
+                <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center relative">
                   <p className="text-3xl md:text-5xl font-bold" style={{ color: 'black' }}>
                     {stat.value}
                   </p>
@@ -332,7 +335,7 @@ const FasilitasSection = ({ theme }: any) => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
+    <section className="py-8 md:py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-6">
         <motion.h2 
           initial={{ opacity: 0, y: -30 }} 
@@ -407,7 +410,7 @@ const BeritaSection = ({ theme }: any) => {
   if (isPending) return <div className="py-16 text-left md:text-center">Loading berita...</div>;
 
   return (
-    <section className="py-16 bg-gradient-to-b from-purple-50 to-white">
+    <section className="py-0 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between mb-12">
           <h2 className="text-3xl md:text-4xl font-bold" style={{ color: 'black' }}>Berita & Pengumuman</h2>
@@ -436,7 +439,7 @@ const BeritaSection = ({ theme }: any) => {
 
 const VideoSection = ({ theme }: any) => {
   return (
-    <section className="py-6">
+    <section className="md:py-6">
       <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
         <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
           className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
@@ -466,10 +469,10 @@ const VideoSection = ({ theme }: any) => {
 const InstagramFeedSection = ({ theme }: any) => {
   // Data post sesuai konten yang diberikan (statis, karena tidak ada akun IG resmi)
   const posts = [
-    {
+   {
       username: "sman25jkt_official",
       profilePic: "/logo.jpg", // Ganti dengan foto profil sekolah jika ada
-      media: "/feed1.jpg", // Foto Hari Guru
+      media: "/feed2.jpg", // Foto Hari Guru
       type: "image",
       likes: 48,
       date: "25 November 2025",
@@ -480,7 +483,7 @@ const InstagramFeedSection = ({ theme }: any) => {
     {
       username: "sman25jkt_official",
       profilePic: "/logo.jpg",
-      media: "/feed2.jpg", // Foto pengambilan raport
+      media: "/feed1.png", // Foto pengambilan raport
       type: "image",
       likes: 36,
       date: "19 Desember 2025",
@@ -585,13 +588,69 @@ const InstagramFeedSection = ({ theme }: any) => {
     </section>
   );
 };
+
+// === STATS BAR ===
+const StatsBar = ({ theme }: any) => {
+  const { data: stats = [], isPending, error } = useStats();
+
+  // Daftar icon sesuai urutan stats (sesuaikan dengan data stats kamu)
+  const icons = [
+      <UserCheck className="w-12 h-12 md:w-12 md:h-12 p-3 rounded-md bg-green-600 text-white" />,     // Kehadiran
+      <UserX className="w-12 h-12 md:w-12 md:h-12 p-3 rounded-md bg-red-600 text-white" />,           // Alpha
+      <Thermometer className="w-12 h-12 md:w-12 md:h-12 p-3 rounded-md bg-orange-600 text-white" />,  // Sakit
+      <FileCheck className="w-12 h-12 md:w-12 md:h-12 p-3 rounded-md bg-blue-600 text-white" />,      // Izin
+  ];
+
+  if (isPending) return <div className="py-6 text-center">Loading stats...</div>;
+  if (error) return <div className="py-6 text-red-400 text-center">Error: {error.message}</div>;
+
+  return (
+    <section id="stats" className="w-full md:w-7xl px-2 md:px-16 rounded-2xl mx-auto relative py-6 mt-[-60px] h-max">
+      <div className="w-full mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
+          {stats.map((s: any, i: number) => (
+            <motion.div
+              key={s.k}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="rounded-2xl px-6 border shadow-lg h-[110px] bg-white pb-0 border-gray-300 flex flex-col items-start justify-center"
+            >
+              <div className="flex items-center gap-6 relative mt-1">
+                {/* Icon */}
+                <div className="text-black h-full w-[30%] opacity-80">
+                  {icons[i] || null} {/* fallback null jika urutan tidak cocok */}
+                </div>
+                <div className="flex flex-col h-max items-start gap-2 text-xl md:text-2xl font-bold" style={{ color: 'black' }}>
+                  {/* Label */}
+                  <div className="text-xs md:text-[16px] w-max opacity-80" style={{ color: 'black' }}>
+                    {s.k}
+                  </div>
+                  <div className="w-max flex items-center gap-2">
+                    {s.v} 
+                    <p className="text-sm font-normal text-gray-500">
+                      Orang
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Page utama
 const Page = ({ theme, schoolName, onTenantChange, currentKey }: any) => (
-  <div className="min-h-screen bg-slate-50">
+  <div className="min-h-screen bg-white">
     <NavbarComp theme={theme} onTenantChange={onTenantChange} currentKey={currentKey} />
     {/* GlobalInfoBar & StatsBar bisa ditambahkan di sini jika ingin */}
     <Hero theme={theme} />
-    <KeunggulanSection theme={theme} />
+    <StatsBar theme={theme} />
+    {/* <KeunggulanSection theme={theme} /> */}
     <SambutanSection theme={theme} />
     <FasilitasSection theme={theme} />
     <VideoSection theme={theme} />

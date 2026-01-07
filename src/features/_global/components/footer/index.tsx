@@ -147,7 +147,7 @@ export const FooterComp = ({ theme }) => {
                   className="text-base font-semibold"
                   style={{ color: safeTheme.primaryText }}
                 >
-                  {"SMAN 25 Jakarta"}
+                  {"SMAN 25 JAKARTA"}
                 </div>
                 <div
                   className="text-xs opacity-80"

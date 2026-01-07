@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 // Theme Tokens for Multiple Schools
 const THEME_TOKENS = {
   sman25: {
-    name: "SMAN 25 Jakarta",
+    name: "SMAN 25 JAKARTA",
     "--brand-primary": "#457B9D",
     "--brand-primaryText": "#ffffff",
     "--brand-accent": "#F4A261",
@@ -122,7 +122,7 @@ const LoginMenu = ({ theme }) => {
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <p>Login</p>
+        <p className="uppercase">Login</p>
         <ChevronDown className="w-[14px]" />
       </button>
       <AnimatePresence>
@@ -132,7 +132,7 @@ const LoginMenu = ({ theme }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.16 }}
-            className="absolute right-0 mt-2 border border-blue-700 w-48 rounded-lg shadow-2xl p-2 bg-white"
+            className="absolute right-0 mt-2 border uppercase border-blue-700 w-48 rounded-lg shadow-2xl p-2 bg-white"
             style={{ borderColor: theme.subtle }}
             role="menu"
           >
@@ -142,7 +142,7 @@ const LoginMenu = ({ theme }) => {
                 href={i.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block px-3 py-2 rounded-lg text-sm hover:bg-black/5"
+                className="block px-3 py-2 rounded-lg uppercase text-sm hover:bg-black/5"
                 style={{ color: "black" }}
                 role="menuitem"
               >
@@ -168,7 +168,7 @@ const NavDropdown = ({ item, theme }) => {
     return isRoute ? (
       <Link
         href={item.href}
-        className="text-sm px-1 w-max py-1 hover:underline"
+        className="text-sm px-1 w-max py-1 uppercase hover:underline"
         style={{ color: 'black' }}
       >
         {item.label}
@@ -176,7 +176,7 @@ const NavDropdown = ({ item, theme }) => {
     ) : (
       <a
         href={item.href}
-        className="text-sm px-1 w-max py-1 hover:underline"
+        className="text-sm px-1 w-max py-1 uppercase hover:underline"
         style={{ color: 'black' }}
       >
         {item.label}
@@ -192,7 +192,7 @@ const NavDropdown = ({ item, theme }) => {
       onMouseLeave={() => setOpen(false)}
     >
       <button
-        className="text-sm px-1 py-1 w-max flex items-center gap-1"
+        className="text-sm px-1 py-1 w-max uppercase flex items-center gap-1"
         style={{ color: 'black' }}
         onClick={() => setOpen((v) => !v)}
       >
@@ -208,7 +208,7 @@ const NavDropdown = ({ item, theme }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.16 }}
-            className="absolute left-0 mt-2 w-44 rounded-xl border shadow-xl p-2"
+            className="absolute left-0 mt-2 w-44 rounded-xl uppercase border shadow-xl p-2"
             style={{ background: "rgba(16,23,71,0.9)", borderColor: theme.subtle }}
           >
             {item.children.map((c) => {
@@ -217,7 +217,7 @@ const NavDropdown = ({ item, theme }) => {
                 <Link
                   key={c.label}
                   href={c.href}
-                  className="block px-3 py-2 rounded-lg text-sm hover:bg-white/10"
+                  className="block px-3 py-2 rounded-lg text-sm uppercase hover:bg-white/10"
                   style={{ color: 'white' }}
                 >
                   {c.label}
@@ -226,7 +226,7 @@ const NavDropdown = ({ item, theme }) => {
                 <a
                   key={c.label}
                   href={c.href}
-                  className="block px-3 py-2 rounded-lg text-sm hover:bg-white/10"
+                  className="block px-3 py-2 rounded-lg text-sm uppercase hover:bg-white/10"
                   style={{ color: 'black' }}
                 >
                   {c.label}
@@ -250,7 +250,7 @@ const MobileAccordion = ({ item, theme }) => {
     return isRoute ? (
       <Link
         href={item.href}
-        className="block px-4 py-3 rounded-lg hover:bg-white/10 transition-colors"
+        className="block px-4 py-3 rounded-lg uppercase hover:bg-white/10 transition-colors"
         style={{ color: 'white' }}
       >
         {item.label}
@@ -258,7 +258,7 @@ const MobileAccordion = ({ item, theme }) => {
     ) : (
       <a
         href={item.href}
-        className="block px-4 py-3 rounded-lg hover:bg-white/10 transition-colors"
+        className="block px-4 py-3 rounded-lg uppercase hover:bg-white/10 transition-colors"
         style={{ color: 'white' }}
       >
         {item.label}
@@ -270,7 +270,7 @@ const MobileAccordion = ({ item, theme }) => {
     <div>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 transition-colors"
+        className="w-full flex items-center uppercase justify-between px-4 py-3 rounded-lg hover:bg-white/10 transition-colors"
         style={{ color: 'white' }}
       >
         <span>{item.label}</span>
@@ -291,7 +291,7 @@ const MobileAccordion = ({ item, theme }) => {
                 <Link
                   key={c.label}
                   href={c.href}
-                  className="block px-4 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
+                  className="block px-4 py-2 uppercase rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
                   style={{ color: 'white' }}
                 >
                   {c.label}
@@ -300,7 +300,7 @@ const MobileAccordion = ({ item, theme }) => {
                 <a
                   key={c.label}
                   href={c.href}
-                  className="block px-4 py-2 rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
+                  className="block px-4 py-2 uppercase rounded-lg text-sm hover:bg-white/5 transition-colors mt-1"
                   style={{ color: 'white' }}
                 >
                   {c.label}
@@ -348,7 +348,7 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
 
   return (
     <>
-      <header className="w-full text-xs px-16 font-normal bg-blue-500 tex-white hidden md:flex items-center justify-center p-3">
+      <header className="w-full text-xs px-16 uppercase font-normal bg-blue-500 tex-white hidden md:flex items-center justify-center p-3">
         <p>
           +1 (212)-695-1962info@sman25-jkt.sch.id, Jakarta, Jalan A.M Sangaji No. 22-24 Petojo Utara Gambir
         </p>
@@ -376,14 +376,14 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
             </div>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center w-max gap-6 xl:gap-8">
+            <div className="hidden md:flex uppercase items-center w-max gap-6 xl:gap-8">
               {navItems.map((item) => (
                 <NavDropdown key={item.label} item={item} theme={safeTheme} />
               ))}
             </div>
 
             {/* Login + Mobile Toggle */}
-            <div className="flex items-center w-[30%] justify-end gap-4">
+            <div className="flex items-center w-[30%] uppercase justify-end gap-4">
               <LoginMenu theme={safeTheme} />
               <button
                 className="md:hidden inline-flex items-center justify-center flex-col gap-1 w-14 h-14"

@@ -13,6 +13,11 @@
   display: none;
 }
 
+
+h1, h2 {
+  text-transform: uppercase;
+}
+
 .poppins-extralight {
   font-family: "Poppins", sans-serif;
   font-weight: 200;
