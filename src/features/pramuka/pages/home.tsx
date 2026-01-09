@@ -1289,14 +1289,14 @@ export function PramukaMain() {
             >
               <div className="flex items-center gap-4">
                 <div 
-                  className="w-14 h-14 rounded-full border grid place-items-center text-xs font-semibold"
+                  className="w-14 h-14 rounded-full overflow-hidden bg-cover border grid place-items-center text-xs font-semibold"
                   style={{ 
                     background: theme.surface + "20", 
                     borderColor: theme.border,
                     color: theme.primaryText
                   }}
                 >
-                  {shortName}
+                  <img src="/pramuka.jpg" alt="gambar" className="w-full h-full" />
                 </div>
                 <div>
                   <div className="text-sm opacity-80" style={{ color: theme.primaryText }}>Beranda / Pramuka</div>

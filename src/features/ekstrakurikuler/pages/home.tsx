@@ -13,78 +13,15 @@ const CATEGORIES = ["Sains & Riset", "Pramuka", "Jurnalistik", "Keagamaan", "Bah
 const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
 const CLUBS = [
-  {
-    name: "KIR (Kelompok Ilmiah Remaja)",
-    category: "Sains & Riset",
-    day: "Kamis",
-    time: "15:30–17:00",
-    room: "Lab IPA",
-    coach: "Bu Nisa",
-    quota: 30,
-    img: "/eks1.jpg",
-    desc: "KIR adalah wadah bagi siswa yang gemar bereksperimen dan meneliti fenomena sains. Kami melakukan riset ilmiah, membuat karya tulis, dan mempersiapkan lomba seperti OSN serta kompetisi nasional lainnya. Bergabunglah untuk mengasah logika dan kreativitas ilmiah!",
-    achievements: ["Finalis LIPI 2024", "Juara 3 Provinsi 2025"],
-  },
-  {
-    name: "Pramuka",
-    category: "Pramuka",
-    day: "Jumat",
-    time: "14:00–16:00",
-    room: "Lapangan",
-    coach: "Kak Sinta",
-    quota: 60,
-    img: "/eks2.jpg",
-    desc: "Pramuka SMAN 25 Jakarta mengajarkan kemandirian, kepemimpinan, survival skill, dan cinta alam. Kami rutin mengadakan kemah, penggalangan, dan jambore. Jadilah bagian dari generasi tangguh dan berjiwa nasionalisme tinggi!",
-    achievements: ["Jambore Nasional 2024", "Penggalang Terbaik Kecamatan"],
-  },
-  {
-    name: "Jurnalistik",
-    category: "Jurnalistik",
-    day: "Rabu",
-    time: "15:30–17:00",
-    room: "Ruang Multimedia",
-    coach: "Pak Budi",
-    quota: 25,
-    img: "/eks3.jpg",
-    desc: "Ekskul Jurnalistik melatih siswa dalam menulis berita, feature, fotografi jurnalistik, dan produksi majalah sekolah serta mading digital. Kami mengasah kemampuan komunikasi, observasi, dan etika jurnalisme untuk masa depan di bidang media.",
-    achievements: ["Juara 2 Lomba Jurnalistik Pelajar DKI 2025"],
-  },
-  {
-    name: "Rohis",
-    category: "Keagamaan",
-    day: "Kamis",
-    time: "15:00–16:30",
-    room: "Masjid Sekolah",
-    coach: "Ust. Fajar",
-    quota: 40,
-    img: "/eks4.jpg",
-    desc: "Rohis (Kerohanian Islam) adalah tempat pengembangan spiritual siswa Muslim. Kami mengadakan kajian rutin, tahsin Al-Qur'an, kultum, dan kegiatan sosial seperti bakti sosial serta pesantren kilat. Bangun akhlak mulia dan ukhuwah islamiyah di sini.",
-    achievements: ["Peringkat 1 MTQ Tingkat Provinsi 2024"],
-  },
-  {
-    name: "English Club",
-    category: "Bahasa",
-    day: "Selasa",
-    time: "15:30–17:00",
-    room: "Ruang Bahasa",
-    coach: "Ms. Rachel",
-    quota: 35,
-    img: "/eks5.jpg",
-    desc: "English Club fokus pada penguasaan bahasa Inggris melalui conversation, public speaking, debate, dan drama. Kami mempersiapkan siswa untuk kompetisi nasional serta ujian internasional seperti TOEFL. Improve your English confidently!",
-    achievements: ["Juara English Debate Competition 2025"],
-  },
-  {
-    name: "Multimedia",
-    category: "Multimedia",
-    day: "Sabtu",
-    time: "09:00–12:00",
-    room: "Lab Komputer",
-    coach: "Pak Doni",
-    quota: 28,
-    img: "/eks6.jpg",
-    desc: "Multimedia mengajarkan desain grafis, fotografi, videografi, editing video, dan animasi menggunakan software profesional seperti Adobe Suite. Hasil karya kami sering dipakai untuk promosi sekolah dan lomba kreatif digital.",
-    achievements: ["Best Short Film Festival Pelajar 2025"],
-  },
+  { name: "Futsal", category: "Olahraga", day: "Rabu", time: "15:30–17:30", room: "Lapangan", coach: "Pak Dedi", quota: 40, members: 32, img: '/ekstra.jpg', desc: "Pembinaan teknik dasar, taktik, dan sportivitas.", achievements: ["Juara 2 Kota 2024"] },
+  { name: "Basket", category: "Olahraga", day: "Jumat", time: "15:30–17:30", room: "Gor Mini", coach: "Bu Rina", quota: 30, members: 28, img: '/ekstra.jpg', desc: "Fundamental, defense, dan teamplay.", achievements: [] },
+  { name: "Paskibra", category: "Leadership", day: "Selasa", time: "15:30–17:30", room: "Lapangan Upacara", coach: "Pak Arman", quota: 50, members: 45, img: '/ekstra.jpg', desc: "Latihan baris-berbaris dan kedisiplinan.", achievements: ["Tugas HUT RI 2025 Kecamatan"] },
+  { name: "Pramuka", category: "Pramuka", day: "Jumat", time: "14:00–16:00", room: "Aula", coach: "Kak Sinta", quota: 60, members: 54, img: '/ekstra.jpg', desc: "Kepramukaan, kemandirian, dan kepemimpinan.", achievements: ["Jambore 2024"] },
+  { name: "Rohis", category: "Keagamaan", day: "Kamis", time: "15:00–16:30", room: "Masjid", coach: "Ust. Fajar", quota: 40, members: 35, img: '/ekstra.jpg', desc: "Kajian, tahsin, dan kegiatan sosial.", achievements: [] },
+  { name: "Paduan Suara", category: "Seni", day: "Rabu", time: "15:30–17:00", room: "Ruang Musik", coach: "Bu Maya", quota: 35, members: 20, img: '/ekstra.jpg', desc: "Teknik vokal dan harmoni.", achievements: ["Penampil Tamu Festival 2025"] },
+  { name: "Teater", category: "Seni", day: "Selasa", time: "15:30–17:30", room: "Aula", coach: "Pak Yoga", quota: 25, members: 18, img: '/ekstra.jpg', desc: "Aktor, naskah, dan panggung.", achievements: [] },
+  { name: "KIR (Kelompok Ilmiah Remaja)", category: "Sains & Riset", day: "Kamis", time: "15:30–17:00", room: "Lab IPA", coach: "Bu Nisa", quota: 30, members: 22, img: '/ekstra.jpg', desc: "Riset sains dan lomba karya tulis.", achievements: ["Finalis LIPI 2024"] },
+  { name: "Robotik", category: "Sains & Riset", day: "Sabtu", time: "08:00–11:00", room: "Lab RPL", coach: "Pak Doni", quota: 24, members: 21, img: '/ekstra.jpg', desc: "Arduino, IoT, dan kompetisi robot.", achievements: ["Juara 3 Provinsi 2025"] },
 ];
 
 /****************************
@@ -294,11 +231,16 @@ const EkskulSection = ({ theme, schoolName }: any) => {
     return cats.length > 0 ? cats : CATEGORIES;
   }, [displayClubs]);
 
-  // const filtered = useMemo(() => {
-  //   return filterClubs(displayClubs, q, category, day)
-  //     .slice()
-  //     .sort(sorters[sortBy as keyof typeof sorters]);
-  // }, [q, category, day, sortBy, displayClubs]);
+  const sorters = {
+    nama: (a,b) => a.name.localeCompare(b.name),
+    populer: (a,b) => (b.members||0) - (a.members||0),
+  };
+
+  const filtered = useMemo(() => {
+    return filterClubs(displayClubs, q, category, day)
+      .slice()
+      .sort(sorters[sortBy as keyof typeof sorters]);
+  }, [q, category, day, sortBy, displayClubs]);
 
   return (
     <section id="ekskul" className="py-12 md:py-20 bg-gray-50">
@@ -333,17 +275,17 @@ const EkskulSection = ({ theme, schoolName }: any) => {
             value={q}
             onChange={e => setQ(e.target.value)}
             placeholder="Cari ekskul..."
-            className="px-4 py-2 rounded-xl border border-black/10 focus:outline-none focus:border-black/30"
+            className="px-4 py-2 rounded-xl border text-black border-black/10 focus:outline-none focus:border-black/30"
           />
-          <select value={category} onChange={e => setCategory(e.target.value)} className="px-4 py-2 rounded-xl border border-black/10">
+          <select value={category} onChange={e => setCategory(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
             <option>Semua Kategori</option>
             {categories.map((c: any) => <option key={c}>{c}</option>)}
           </select>
-          <select value={day} onChange={e => setDay(e.target.value)} className="px-4 py-2 rounded-xl border border-black/10">
+          <select value={day} onChange={e => setDay(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
             <option>Semua Hari</option>
             {DAYS.map(d => <option key={d}>{d}</option>)}
           </select>
-          <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="px-4 py-2 rounded-xl border border-black/10">
+          <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
             <option value="nama">Nama (A-Z)</option>
             <option value="populer">Populer</option>
           </select>
@@ -360,9 +302,9 @@ const EkskulSection = ({ theme, schoolName }: any) => {
               </div>
             ))}
           </div>
-        ) : displayClubs.length > 0 ? (
+        ) : filtered.length > 0 ? (
           <motion.div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {displayClubs.map((club: any) => (
+            {filtered.map((club: any) => (
               <ClubCard key={club.name} club={club} theme={theme} onOpen={setSelected} />
             ))}
           </motion.div>
@@ -376,28 +318,28 @@ const EkskulSection = ({ theme, schoolName }: any) => {
         <Modal open={!!selected} onClose={() => setSelected(null)} theme={theme} title={selected?.name}>
           {selected && (
             <div>
-              <img src={selected.img} alt={selected.name} className="w-full h-40 object-cover rounded-xl mb-6" />
-              {/* <div className="flex flex-wrap gap-2 mb-4">
+              {/* <img src={selected.img} alt={selected.name} className="w-full h-40 object-cover rounded-xl mb-6" /> */}
+              <div className="flex flex-wrap gap-2 mb-4  text-black">
                 <Chip theme={theme}>{selected.category}</Chip>
                 <Chip theme={theme}>{selected.day}</Chip>
                 <Chip theme={theme}>{selected.time}</Chip>
                 <Chip theme={theme}>{selected.room}</Chip>
                 <Chip theme={theme}>{selected.members}/{selected.quota} anggota</Chip>
-              </div> */}
+              </div>
               <p className="text-base mb-6 leading-relaxed text-black">{selected.desc}</p>
-              {/* {selected.achievements?.length > 0 && (
+              {selected.achievements?.length > 0 && (
                 <div className="mb-6">
                   <h4 className="font-semibold mb-2">Prestasi</h4>
                   <ul className="list-disc pl-6 space-y-1 text-sm">
                     {selected.achievements.map((a: string, i: number) => <li key={i}>{a}</li>)}
                   </ul>
                 </div>
-              )} */}
-              {/* <p className="text-sm mb-6">Pembina: <strong>{selected.coach}</strong></p>
-              <div className="text-sm space-y-2">
+              )}
+              <p className="text-sm mb-6  text-black">Pembina: <strong>{selected.coach}</strong></p>
+              <div className="text-sm  text-black md:flex items-center gap-4 block">
                 <p>📞 Telepon: <a href="tel:(021)6331921" className="underline">(021) 6331921</a></p>
                 <p>✉️ Email: <a href="mailto:info@sman25-jkt.sch.id" className="underline">info@sman25-jkt.sch.id</a></p>
-              </div> */}
+              </div>
               <div className="flex gap-4 mt-8">
                 {/* <button
                   onClick={() => alert("Pendaftaran akan segera dibuka. Hubungi pembina untuk info lebih lanjut.")}
@@ -405,7 +347,7 @@ const EkskulSection = ({ theme, schoolName }: any) => {
                 >
                   Daftar Sekarang
                 </button> */}
-                {/* <button onClick={() => setSelected(null)} className="px-6 py-3 border border-black/20 rounded-xl">
+                {/* <button onClick={() => setSelected(null)} className="px-6  text-black py-3 border border-black/20 rounded-xl">
                   Tutup
                 </button> */}
               </div>

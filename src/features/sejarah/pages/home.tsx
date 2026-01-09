@@ -703,11 +703,11 @@ const Timeline: React.FC<{ theme: any; data: any[] }> = ({ theme, data }) => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : i * 0.05 }}
-                className="relative pl-12 rounded-2xl p-4 border group hover:shadow-md"
+                className="relative pl-4 items-center rounded-2xl gap-5 flex p-4 border group hover:shadow-md"
                 style={{ background: theme.surface, borderColor: theme.subtle }}
               >
                 <motion.div
-                  className="absolute left-1.5 top-5 w-6 h-6 rounded-full grid place-items-center border"
+                  className="relative w-max h-6 rounded-full grid place-items-center border"
                   style={{ background: theme.surface, borderColor: theme.accent }}
                   whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }}
                 >

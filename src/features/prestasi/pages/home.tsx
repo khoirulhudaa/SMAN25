@@ -574,7 +574,7 @@ const PrestasiSection = ({ theme, schoolName }) => {
           if (!res.ok) throw new Error('Failed');
           const json = await res.json();
           if (!json.data || !Array.isArray(json.data)) return [];
-          return json.data.map(item => ({
+          return json.data.map((item: any) => ({
             title: item.namaPrestasi || 'Tidak diketahui',
             date: new Date(item.tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
             category: item.jenis || 'Lainnya',

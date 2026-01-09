@@ -612,15 +612,16 @@
 // export default GalleryPage;
 
 
-
 import { SMAN25_CONFIG } from "@/core/theme";
+import { getXHostHeader } from "@/core/utils/XHostHeader";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
 import { motion } from "framer-motion";
+import { ArrowLeft, ArrowLeftCircle, ArrowRightCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 /****************************
- * HERO SECTION UNTUK GALERI
+ * HERO SECTION (Tetap sama seperti Kode A)
  ****************************/
 const HeroSection = () => {
   const scrollToGallery = () => {
@@ -629,29 +630,23 @@ const HeroSection = () => {
 
   return (
     <section className="relative h-[78vh] flex items-center justify-center z-[1] overflow-hidden">
-      {/* Background Image - Kegiatan Sekolah Representatif */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/kgp2.jpeg')`, // Ganti jika ada foto resmi
+          backgroundImage: `url('/kgp2.jpeg')`,
           backgroundPosition: "center 35%",
         }}
       />
-
-      {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
-
-      {/* Content */}
       <div className="relative z-10 md:text-center text-left text-white px-6 max-w-5xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
-           className="text-4xl md:text-6xl font-bold mb-6"
+          className="text-4xl md:text-6xl font-bold mb-6"
         >
           Galeri Kegiatan
         </motion.h1>
-
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -660,7 +655,6 @@ const HeroSection = () => {
         >
           Dokumentasi foto dan video kegiatan siswa, guru, dan sekolah SMAN 25 Jakarta
         </motion.p>
-
         <motion.button
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -678,7 +672,7 @@ const HeroSection = () => {
 };
 
 /****************************
- * DUMMY DATA GALERI (Fallback jika API gagal)
+ * DUMMY DATA (Fallback)
  ****************************/
 const DUMMY_ALBUMS = [
   {
@@ -747,36 +741,82 @@ const DUMMY_ITEMS = {
 };
 
 /****************************
- * GALLERY PAGE DENGAN HERO & DUMMY DATA
+ * API HELPERS (Sama seperti Kode B)
  ****************************/
-const GalleryPage = () => {
-  const schoolInfo = SMAN25_CONFIG;
-  const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
+const API_BASE = "https://dev.kiraproject.id";
+const API_HEADERS = {
+  "X-Host": getXHostHeader(),
+  'Cache-Control': 'no-store',
+};
 
+const fetchAlbums = async (): Promise<any[]> => {
+  const res = await fetch(`${API_BASE}/albums?includeItems=false`, { headers: API_HEADERS, cache: 'no-store' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (!json.success) throw new Error("API response not success");
+  return json.data.filter((a: any) => a.isActive);
+};
+
+const fetchAlbumItems = async (albumId: number): Promise<any[]> => {
+  const res = await fetch(`${API_BASE}/gallery?albumId=${albumId}&isActive=true`, { headers: API_HEADERS, cache: 'no-store' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  if (!json.success) throw new Error("API gallery not success");
+  return (json.data || []).map((it: any) => ({
+    id: `api-${it.id}`,
+    type: "photo",
+    title: it.title,
+    albumTitle: it.albumTitle || "Album",
+    date: it.date || it.createdAt,
+    src: it.imageUrl,
+  }));
+};
+
+/****************************
+ * HOOK: useGallery (Mirip Kode B, tapi disesuaikan struktur dummy)
+ ****************************/
+const useGallery = () => {
   const [albums, setAlbums] = useState<any[]>([]);
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
   const [items, setItems] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingItems, setLoadingItems] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load dummy albums (bisa diganti dengan API jika tersedia)
   useEffect(() => {
-    setLoading(true);
-    // Simulasi loading
-    setTimeout(() => {
-      setAlbums(DUMMY_ALBUMS);
-      setLoading(false);
-    }, 600);
+    (async () => {
+      try {
+        setLoading(true);
+        const data = await fetchAlbums();
+        setAlbums(data.length > 0 ? data : DUMMY_ALBUMS);
+      } catch (e: any) {
+        console.error(e);
+        setError(e.message);
+        setAlbums(DUMMY_ALBUMS); // fallback dummy
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  const openAlbum = (album: any) => {
+  const openAlbum = async (album: any) => {
     setSelectedAlbum(album);
     setCurrentIndex(0);
     setLoadingItems(true);
+    setItems([]);
 
-    setTimeout(() => {
+    try {
+      // Jika album dari API (punya id number), coba fetch items
+      if (typeof album.id === 'number') {
+        const data = await fetchAlbumItems(album.id);
+        if (data.length > 0) {
+          setItems(data);
+          setLoadingItems(false);
+          return;
+        }
+      }
+      // Jika kosong atau bukan dari API → fallback dummy
       const dummyData = DUMMY_ITEMS[album.id as keyof typeof DUMMY_ITEMS] || [];
       setItems(dummyData.map((it: any) => ({
         id: it.id,
@@ -786,8 +826,21 @@ const GalleryPage = () => {
         date: it.date,
         src: it.imageUrl,
       })));
+    } catch (e: any) {
+      console.error(e);
+      // fallback dummy jika error
+      const dummyData = DUMMY_ITEMS[album.id as keyof typeof DUMMY_ITEMS] || [];
+      setItems(dummyData.map((it: any) => ({
+        id: it.id,
+        type: it.type,
+        title: it.title,
+        album: it.albumTitle,
+        date: it.date,
+        src: it.imageUrl,
+      })));
+    } finally {
       setLoadingItems(false);
-    }, 800);
+    }
   };
 
   const closeAlbum = () => {
@@ -799,6 +852,43 @@ const GalleryPage = () => {
   const goPrev = () => setCurrentIndex(i => (i <= 0 ? items.length - 1 : i - 1));
   const goNext = () => setCurrentIndex(i => (i >= items.length - 1 ? 0 : i + 1));
   const goTo = (index: number) => setCurrentIndex(index);
+
+  return {
+    albums,
+    selectedAlbum,
+    items,
+    currentIndex,
+    loading,
+    loadingItems,
+    error,
+    openAlbum,
+    closeAlbum,
+    goPrev,
+    goNext,
+    goTo,
+  };
+};
+
+/****************************
+ * GALLERY PAGE (Layout seperti Kode A + integrasi API)
+ ****************************/
+const GalleryPage = () => {
+  const schoolInfo = SMAN25_CONFIG;
+  const theme = schoolInfo.theme;
+
+  const {
+    albums,
+    selectedAlbum,
+    items,
+    currentIndex,
+    loading,
+    loadingItems,
+    openAlbum,
+    closeAlbum,
+    goPrev,
+    goNext,
+    goTo,
+  } = useGallery();
 
   const currentItem = items[currentIndex];
 
@@ -839,20 +929,20 @@ const GalleryPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  whileHover={{ y: -8 }}
+                  // whileHover={{ y: -8 }}
                   className="group relative rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all cursor-pointer"
                   onClick={() => openAlbum(album)}
                 >
                   <img
-                    src={album.coverUrl}
+                    src={album.coverUrl?.startsWith('uploads') ? `${API_BASE}${album.coverUrl || album.coverUrl}` || album.coverUrl : album.coverUrl}
                     alt={album.title}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-[360px] object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="text-xl font-bold mb-2">{album.title}</h3>
+                    <h3 className="text-xl font-bold mb-2">{album.coverUrl}</h3>
                     <p className="text-sm opacity-90">
-                      {album.itemCount} foto 
+                      {album.itemCount || 'Beberapa'} foto
                     </p>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
@@ -865,7 +955,7 @@ const GalleryPage = () => {
         </div>
       </section>
 
-      {/* LIGHTBOX (dari kode asli, disederhanakan untuk dummy) */}
+      {/* LIGHTBOX (Sama seperti Kode A asli) */}
       {selectedAlbum && !loadingItems && items.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -882,7 +972,7 @@ const GalleryPage = () => {
           >
             <button
               onClick={closeAlbum}
-              className="absolute top-4 right-4 z-10 w-12 h-12 md:w-16 md:h-16 bg-red-700 text-white flex items-center justify-center rounded-full backdrop-blur hover:bg-white/40 text-3xl"
+              className="absolute top-[-3%] right-[-14%] z-10 w-12 h-12 md:w-12 md:h-12 bg-red-700 text-white flex items-center justify-center rounded-full backdrop-blur hover:bg-red-800 text-xl"
             >
               ✕
             </button>
@@ -900,25 +990,23 @@ const GalleryPage = () => {
               </p>
             </div>
 
-            {/* Navigation */}
             {items.length > 1 && (
               <>
                 <button
                   onClick={goPrev}
-                  className="absolute left-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 text-white text-3xl"
+                  className="absolute w-14 h-14 flex items-center justify-center left-[-6%] top-1/2 -translate-y-1/2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 text-white text-6xl"
                 >
-                  ‹
+                  <ArrowLeftCircle className="w-8 h-8" />
                 </button>
                 <button
                   onClick={goNext}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 text-white text-3xl"
+                  className="absolute w-14 h-14 flex items-center justify-center right-[-6%] top-1/2 -translate-y-1/2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 text-white text-6xl"
                 >
-                  ›
+                  <ArrowRightCircle className="w-8 h-8" />
                 </button>
               </>
             )}
 
-            {/* Thumbnails */}
             <div className="absolute bottom-20 left-0 right-0 px-6 overflow-x-auto">
               <div className="flex gap-2 justify-center">
                 {items.map((it, i) => (
@@ -936,6 +1024,12 @@ const GalleryPage = () => {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {loadingItems && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70">
+          <p className="text-white text-xl">Memuat foto...</p>
+        </div>
       )}
 
       <FooterComp theme={theme} />

@@ -495,7 +495,7 @@ const PengurusSection = ({ theme }: any) => {
  ****************/
 const Section = ({ title, subtitle, theme, children }: { title: string; subtitle?: string; theme: any; children: React.ReactNode }) => (
   <section className="py-10 md:py-14">
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4">
       <div className="flex items-end justify-between mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-black">{title}</h1>
@@ -571,7 +571,8 @@ const useVisiMisiData = () => {
  ****************/
 const VisiMisi = ({ theme, schoolName }: { theme: any; schoolName: string }) => {
   const prefersReducedMotion = useReducedMotion();
-  const { data = DEMO_DATA, isPending: loading, error } = useVisiMisiData();
+  const { data, isPending: loading, error } = useVisiMisiData();
+  const displayData = data || data?.visi ? data : DEMO_DATA;
 
   return (
     <div id="visi-misi" className="relative bg-gray-50 pt-8">
@@ -591,14 +592,14 @@ const VisiMisi = ({ theme, schoolName }: { theme: any; schoolName: string }) => 
           viewport={{ once: true }}
           className="text-xl md:text-2xl font-semibold rounded-2xl p-8 bg-white border border-black/10 shadow-lg text-black"
         >
-          {DEMO_DATA.visi}
+          {displayData.visi}
         </motion.blockquote>
       </Section>
 
       {/* Misi */}
       <Section title="Misi" subtitle="Langkah strategis untuk mewujudkan visi" theme={theme}>
         <div className="grid md:grid-cols-2 gap-6">
-          {DEMO_DATA.misi.map((item, i) => (
+          {displayData.misi.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 12 }}

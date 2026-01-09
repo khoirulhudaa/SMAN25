@@ -130,7 +130,7 @@ export const FooterComp = ({ theme }) => {
   return (
     <footer className="mt-8">
       <div
-        className="w-full bg-blue-500 mx-auto px-5 md:px-32 py-10 border-t"
+        className="w-full bg-blue-500 mx-auto px-4 md:px-16 py-10 border-t"
         style={{ borderColor: safeTheme.subtle }}
       >
         <div className="grid md:grid-cols-4 gap-6">

@@ -173,7 +173,7 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('/hero2.png')`,
+          backgroundImage: `url('/sambutan.webp')`,
         }}
       />
 
@@ -312,9 +312,10 @@ const SambutanSection = ({ theme }: any) => {
 
             {/* Foto Kepala Sekolah */}
             <div className="relative rounded-2xl overflow-hidden">
+              {/* <h1>{sambutan.photo}</h1> */}
               <SafeImage 
-                // src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/defaultKepsek.jpg"}
-                src={"/kapalaSekolah.png"}
+                src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/kapalaSekolah.png"}
+                // src={"/kapalaSekolah.png"}
                 alt="Kepala Sekolah" 
                 className="w-full h-[400px] md:h-[300px] object-contain" 
               />
@@ -324,14 +325,14 @@ const SambutanSection = ({ theme }: any) => {
           {/* Bagian Kanan: Teks + Stats */}
           <div className="flex flex-col justify-center space-y-8">
             {/* Teks Sambutan */}
-            {/* <div className="text-lg text-gray-700 leading-relaxed space-y-4">
+            <div className="text-lg text-gray-700 leading-relaxed space-y-4">
               {sambutan?.text.split("\n").map((p: string, i: number) => (
                 <p key={i}>{p}</p>
               ))}
-            </div> */}
-            <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
+            </div>
+            {/* <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
               Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
-            </p>
+            </p> */}
 
             {/* Signature */}
             <div className="mt-8">
