@@ -283,7 +283,8 @@ const SambutanSection = ({ theme }: any) => {
             {/* Foto Kepala Sekolah */}
             <div className="relative rounded-2xl overflow-hidden">
               <SafeImage 
-                src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/kapalaSekolah.png"}
+                // src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/kapalaSekolah.png"}
+                src='/kapalaSekolah.png'
                 alt="Kepala Sekolah" 
                 className="w-full h-[400px] md:h-[300px] object-contain" 
               />
