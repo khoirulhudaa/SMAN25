@@ -643,7 +643,7 @@ function BeritaSection({ theme, schoolName }) {
 
   return (
     <section id="berita" className="py-12 md:py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}

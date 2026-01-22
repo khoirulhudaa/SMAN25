@@ -11,9 +11,9 @@
   font-style: normal;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   display: none;
-}
+} */
 
 H2 {
   text-transform: uppercase;

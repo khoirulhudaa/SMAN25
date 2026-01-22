@@ -198,8 +198,7 @@ const HeroSection = () => {
           className="text-lg md:text-xl mb-10 max-w-3xl mx-auto text-white/90 leading-relaxed"
         >
           Selamat datang di website resmi SMAN 25 Jakarta. 
-          Kami berkomitmen memberikan pendidikan berkualitas, 
-          membentuk karakter unggul, dan menyiapkan generasi masa depan yang berprestasi.
+          Kami berkomitmen memberikan pendidikan berkualitas.
         </motion.p>
 
         <motion.button
@@ -297,7 +296,7 @@ const SambutanSection = ({ theme }: any) => {
 
   return (
     <section id="sambutan" className="py-16 md:py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-0">
         <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
           {/* Bagian Kiri: Foto + Logo Sekolah */}
           <div className="relative">
@@ -317,7 +316,7 @@ const SambutanSection = ({ theme }: any) => {
                 // src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/kapalaSekolah.png"}
                 src={"/kapalaSekolah.png"}
                 alt="Kepala Sekolah" 
-                className="w-full h-[400px] md:h-[300px] object-contain" 
+                className="w-full h-[400px] md:h-[460px] object-contain" 
               />
             </div>
           </div>

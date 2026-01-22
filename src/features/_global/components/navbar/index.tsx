@@ -2,8 +2,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-// Theme Tokens for Multiple Schools
 // Theme Tokens for Multiple Schools
 const THEME_TOKENS = {
   sman25: {
@@ -47,9 +47,32 @@ const useOnClickOutside = (ref, handler) => {
   }, [ref, handler]);
 };
 
+// Hook untuk ambil profil sekolah (sama seperti di homepage)
+const useSchoolProfile = () => {
+  const schoolId = 25; // ← sesuaikan dengan ID sekolah SMAN 25 di database
+
+  const API_BASE = 'https://be-school.kiraproject.id';
+  // ? 'http://localhost:5005' 
+  // : 'https://be-school.kiraproject.id';
+
+  return useQuery({
+    queryKey: ['schoolProfile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/profileSekolah?schoolId=${schoolId}`, {
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(`Gagal mengambil profil sekolah: ${res.status}`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Response tidak valid");
+      return data.data; // null atau objek profil
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+
 // === DATA NAVIGASI ===
 const NAV = [
-  // { label: "Beranda", href: "/dashboard" },
   {
     label: "Profil Sekolah",
     children: [
@@ -62,9 +85,10 @@ const NAV = [
     ],
   },
   {
-      label: "Akademik",
-      children: [
-          { label: "Kurikulum", href: "/kurikulum" },
+    label: "Akademik",
+    children: [
+      { label: "Prestasi", href: "/prestasi" },
+      { label: "Kurikulum", href: "/kurikulum" },
       { label: "Kalender", href: "/kalender" },
       { label: "Jadwal", href: "/jadwal" },
       { label: "Guru & Tendik", href: "/guru-tendik" },
@@ -76,7 +100,6 @@ const NAV = [
     children: [
       { label: "OSIS", href: "/osis" },
       { label: "Ekstrakurikuler", href: "/ekstrakulikuler" },
-      { label: "Prestasi", href: "/prestasi" },
       { label: "Pramuka", href: "/pramuka" },
     ],
   },
@@ -86,12 +109,12 @@ const NAV = [
     children: [
       { label: "Pengumuman", href: "/pengumuman" },
       { label: "Berita", href: "/berita" },
-      { label: "Agenda", href: "/agenda" },
+      // { label: "Agenda", href: "/agenda" },
       { label: "Buku Alumni", href: "/buku-alumni" },
       { label: "PPDB", href: "/ppdb" },
       { label: "PPID", href: "/ppid" },
       { label: "Layanan", href: "/layanan" },
-      { label: "Kelulusan", href: "/kelulusan" },
+      // { label: "Kelulusan", href: "/kelulusan" },
     ],
   },
 ];
@@ -327,9 +350,11 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
   const safeTheme = THEME_TOKENS[themeKey] || THEME_TOKENS.smkn13;
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileRef = useMobileMenu(mobileOpen, () => setMobileOpen(false));
-  const ppdbActive = isWithinPeriod(new Date(), PPDB_PERIOD);
 
-  // Filter PPDB jika tidak aktif
+  // Ambil data profil sekolah
+  const { data: profile, isPending } = useSchoolProfile();
+
+  // Filter PPDB jika tidak aktif (kode asli tetap)
   const navItems = NAV.map((it) =>
     it.children
       ? {
@@ -348,24 +373,29 @@ export const NavbarComp = ({ theme = {}, onTenantChange = () => {}, currentKey =
 
   return (
     <>
-      <header className="w-full text-xs px-16 uppercase font-normal bg-blue-500 tex-white hidden md:flex items-center justify-center p-3">
-        <p>
-          +1 (212)-695-1962info@sman25-jkt.sch.id, Jakarta, Jalan A.M Sangaji No. 22-24 Petojo Utara Gambir
-        </p>
+      <header className="w-full text-xs px-16 uppercase font-normal bg-blue-500 text-white hidden md:flex items-center justify-center p-3">
+        {isPending ? (
+          <p className="animate-pulse">Memuat informasi sekolah...</p>
+        ) : profile ? (
+          <p>
+            {profile.phone || "+62 21 1234 5678"} • {profile.email || "info@sman25-jkt.sch.id"} • {profile.address || "Jakarta, Jalan A.M Sangaji No. 22-24 Petojo Utara Gambir"}
+          </p>
+        ) : (
+          <p>
+            +62 21 1234 5678 • info@sman25-jkt.sch.id • Jakarta, Jalan A.M Sangaji No. 22-24 Petojo Utara Gambir
+          </p>
+        )}
       </header>
+
       {/* Header (Desktop + Mobile) */}
       <div
         className="w-full sticky top-0 z-[4] backdrop-blur shadow-xl justify-between bg-white"
-        // style={{ background: "rgba(0,0,0,0.25)", borderBottom: `1px solid ${safeTheme.subtle}` }}
       >
         <div className="max-w-7xl mx-auto md:px-1">
           <div className="w-full flex items-center justify-between px-5 md:px-0 py-3 md:py-4">
             {/* Logo */}
             <div className="flex items-center gap-2 w-[30%]">
               <div className="leading-none flex gap-4 items-center">
-                {/* <div className="rounded-lg bg-blue-500 hidden md:flex items-center justify-center text-white w-10 h-10 shadow-md">
-                  25
-                </div> */}
                 <div
                   className="flex items-center gap-3 text-md w-max md:text-lg font-semibold"
                   style={{ color: 'black' }}

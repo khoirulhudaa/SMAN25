@@ -6,6 +6,64 @@
 // import { useEffect, useMemo, useState } from "react";
 
 // /****************************
+//  * HERO SECTION UNTUK JADWAL PELAJARAN
+//  ****************************/
+// const HeroSection = () => {
+//   const scrollToSchedule = () => {
+//     document.getElementById("jadwal")?.scrollIntoView({ behavior: "smooth" });
+//   };
+
+//   return (
+//     <section className="relative h-[78vh] flex items-center justify-center z-[1] overflow-hidden">
+//       {/* Background Image - Representatif sekolah / suasana belajar */}
+//       <div
+//         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+//         style={{
+//           backgroundImage: `url('/jadwal.jpg')`, // Ganti dengan foto gedung/kelas yang lebih sesuai jika ada
+//           backgroundPosition: "center 35%",
+//         }}
+//       />
+
+//       {/* Gradient Overlay */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90" />
+
+//       {/* Content */}
+//       <div className="relative z-10 md:text-center text-left text-white px-6 max-w-5xl mx-auto">
+//         <motion.h1
+//           initial={{ opacity: 0, y: 40 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, ease: "easeOut" }}
+//           className="text-4xl md:text-6xl font-bold mb-6"
+//         >
+//           Jadwal Pelajaran
+//         </motion.h1>
+
+//         <motion.p
+//           initial={{ opacity: 0, y: 30 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+//           className="text-lg md:text-2xl mb-12 max-w-3xl mx-auto opacity-95 drop-shadow-lg"
+//         >
+//           Informasi jadwal pelajaran terkini siswa SMAN 25 Jakarta
+//         </motion.p>
+
+//         <motion.button
+//           initial={{ opacity: 0, y: 40 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
+//           onClick={scrollToSchedule}
+//           whileHover={{ scale: 1.05 }}
+//           whileTap={{ scale: 0.95 }}
+//           className="px-10 py-4 rounded-2xl bg-white text-gray-900 font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
+//         >
+//           Lihat Jadwal
+//         </motion.button>
+//       </div>
+//     </section>
+//   );
+// };
+
+// /****************************
 //  * THEME & DATA
 //  ****************************/
 // const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
@@ -13,12 +71,12 @@
 // /****************************
 //  * FILTER & SORT HELPERS
 //  ****************************/
-// const normalize = (s) => (s || "").toLowerCase();
+// const normalize = (s: string) => (s || "").toLowerCase();
 
 // /****************************
 //  * SCHEDULE TABLE
 //  ****************************/
-// const ScheduleTable = ({ schedules, theme }) => {
+// const ScheduleTable = ({ schedules, theme }: { schedules: any[]; theme: any }) => {
 //   const prefersReducedMotion = useReducedMotion();
 
 //   if (!schedules || schedules.length === 0) {
@@ -26,8 +84,8 @@
 //       <motion.div
 //         initial={{ opacity: 0, y: 8 }}
 //         animate={{ opacity: 1, y: 0 }}
-//         className="rounded-xl border p-6 text-center"
-//         style={{ borderColor: theme.subtle, background: theme.surface, color: theme.surfaceText }}
+//         className="rounded-xl border p-6 text-left"
+//         style={{ borderColor: theme.subtle, background: theme.surface, color: 'red' }}
 //       >
 //         Tidak ada jadwal yang cocok.
 //       </motion.div>
@@ -94,10 +152,10 @@
 // /****************************
 //  * SCHEDULE SECTION
 //  ****************************/
-// const ScheduleSection = ({ theme, schoolName }) => {
-//   const [schedules, setSchedules] = useState([]);
+// const ScheduleSection = ({ theme }: { theme: any; }) => {
+//   const [schedules, setSchedules] = useState<any[]>([]);
 //   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
+//   const [error, setError] = useState<string | null>(null);
 //   const [q, setQ] = useState("");
 //   const [day, setDay] = useState("Semua");
 //   const [kelas, setKelas] = useState("Semua");
@@ -119,13 +177,13 @@
 //         const result = await response.json();
 
 //         const validSchedules = (result.schedules || [])
-//           .map((s) => ({
+//           .map((s: any) => ({
 //             ...s,
 //             ruang: s.ruang && typeof s.ruang === "object" ? s.ruang.nama : s.ruang,
 //             hari: s.hari ? s.hari.charAt(0).toUpperCase() + s.hari.slice(1).toLowerCase() : null,
 //           }))
 //           .filter(
-//             (s) =>
+//             (s: any) =>
 //               s.mataPelajaran?.nama &&
 //               s.guru?.nama &&
 //               s.kelas?.nama &&
@@ -169,7 +227,7 @@
 //     });
 //   }, [schedules, q, day, kelas]);
 
-//   // Group by day
+//   // Group by day for weekly summary
 //   const scheduleByDay = useMemo(() => {
 //     const group = Object.fromEntries(DAYS.map((d) => [d, []]));
 //     schedules.forEach((s) => {
@@ -180,7 +238,7 @@
 
 //   return (
 //     <section id="jadwal" className="py-12 md:py-16">
-//       <div className="max-w-6xl mx-auto px-4">
+//       <div className="max-w-7xl mx-auto">
 //         <div className="lg:flex items-start justify-between gap-4 mb-4">
 //           <div>
 //             <motion.h2
@@ -191,7 +249,7 @@
 //               className="text-2xl md:text-3xl font-bold"
 //               style={{ color: 'black' }}
 //             >
-//               Jadwal Pelajaran SMAN 25 JAKARTA
+//               Jadwal Pelajaran
 //             </motion.h2>
 //             <motion.p
 //               initial={{ opacity: 0, y: 8 }}
@@ -201,14 +259,14 @@
 //               className="text-sm opacity-85"
 //               style={{ color: theme.surfaceText }}
 //             >
-//               Jadwal pelajaran siswa SMAN 25 JAKARTA.
+//               Jadwal pelajaran siswa.
 //             </motion.p>
 //           </div>
 //           <motion.div
 //             initial={{ opacity: 0 }}
 //             whileInView={{ opacity: 1 }}
 //             viewport={{ once: true }}
-//             className="text-right text-xs lg:mt-0 mt-3"
+//             className="text-right text-xs lg:mt-0 mt-3 md:inline-block hidden"
 //             style={{ color: theme.primaryText }}
 //           >
 //             Total Jadwal: <strong>{schedules.length}</strong>
@@ -222,8 +280,8 @@
 //           <motion.div
 //             initial={{ opacity: 0, y: 8 }}
 //             animate={{ opacity: 1, y: 0 }}
-//             className="rounded-xl border p-4 mb-4 text-center"
-//             style={{ borderColor: theme.subtle, background: theme.surface, color: theme.pop }}
+//             className="rounded-xl border p-4 mb-4 text-left"
+//             style={{ borderColor: theme.subtle, background: theme.surface, color: 'red' }}
 //           >
 //             {error}
 //           </motion.div>
@@ -306,7 +364,7 @@
 //           <h3 className="text-lg font-semibold mb-2" style={{ color: theme.primaryText }}>
 //             Ringkasan Jadwal Mingguan
 //           </h3>
-//           <div className="grid md:grid-cols-1 gap-3">
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 //             {DAYS.map((d, i) => (
 //               <motion.div
 //                 key={d}
@@ -326,7 +384,7 @@
 //                       Tidak ada jadwal.
 //                     </div>
 //                   ) : (
-//                     scheduleByDay[d].map((s, j) => (
+//                     scheduleByDay[d].map((s: any, j: number) => (
 //                       <motion.div
 //                         key={s.id}
 //                         initial={{ opacity: 0 }}
@@ -357,7 +415,7 @@
 // };
 
 // /****************************
-//  * DEFAULT PAGE
+//  * DEFAULT PAGE DENGAN HERO
 //  ****************************/
 // const SchedulePage = () => {
 //   const schoolInfo = SMAN25_CONFIG;
@@ -378,9 +436,14 @@
 //   return (
 //     <div className="min-h-screen" style={{ background: theme.bg }}>
 //       <NavbarComp theme={theme} />
+
+//       {/* HERO SECTION */}
+//       <HeroSection />
+
 //       <main>
-//         <ScheduleSection theme={theme} schoolName=SMAN 25 JAKARTA />
+//         <ScheduleSection theme={theme} schoolName={"SMAN 25 JAKARTA"} />
 //       </main>
+
 //       <FooterComp theme={theme} />
 //     </div>
 //   );
@@ -389,8 +452,9 @@
 // export default SchedulePage;
 
 
+
+
 import { SMAN25_CONFIG } from "@/core/theme";
-import { getXHostHeader } from "@/core/utils/XHostHeader";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
 import { motion, useReducedMotion } from "framer-motion";
@@ -476,9 +540,9 @@ const ScheduleTable = ({ schedules, theme }: { schedules: any[]; theme: any }) =
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         className="rounded-xl border p-6 text-left"
-        style={{ borderColor: theme.subtle, background: theme.surface, color: 'red' }}
+        style={{ borderColor: theme.subtle, background: theme.surface, color: 'black' }}
       >
-        Tidak ada jadwal yang cocok.
+       Belum ada data jadwal pelajaran
       </motion.div>
     );
   }
@@ -515,22 +579,22 @@ const ScheduleTable = ({ schedules, theme }: { schedules: any[]; theme: any }) =
               className="hover:bg-white/5"
             >
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.hari || "-"}
+                {s.day || "-"}
               </td>
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.jamMulai} - {s.jamSelesai}
+                {s.startTime} - {s.endTime}
               </td>
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.mataPelajaran?.nama || "-"}
+                {s.subject || "-"}
               </td>
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.guru?.nama || "-"}
+                {s.teacher || "-"}
               </td>
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.kelas?.nama ? `${s.kelas.nama} (${s.kelas.level})` : "-"}
+                {s.className || "-"}
               </td>
               <td className="px-4 py-2 border-b" style={{ borderColor: theme.subtle, color: theme.surfaceText }}>
-                {s.ruang || "-"}
+                {s.room || "-"}
               </td>
             </motion.tr>
           ))}
@@ -551,46 +615,49 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
   const [day, setDay] = useState("Semua");
   const [kelas, setKelas] = useState("Semua");
 
-  // Fetch data from API
+  // Fetch data from NEW API (hanya bagian ini yang diubah)
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://dev.kiraproject.id/jadwal", {
+        const response = await fetch(`https://be-school.kiraproject.id/jadwal?schoolId=88`, {
           method: "GET",
           cache: 'no-store',
-          headers: {
-            "X-Host": getXHostHeader(),
-            'Cache-Control': 'no-store',
-          },
         });
-        if (!response.ok) throw new Error("Failed to fetch schedule data");
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
         const result = await response.json();
 
-        const validSchedules = (result.schedules || [])
+        if (!result.success) {
+          throw new Error(result.message || "Response tidak valid");
+        }
+
+        const validSchedules = (result.data || [])
           .map((s: any) => ({
             ...s,
-            ruang: s.ruang && typeof s.ruang === "object" ? s.ruang.nama : s.ruang,
-            hari: s.hari ? s.hari.charAt(0).toUpperCase() + s.hari.slice(1).toLowerCase() : null,
+            day: s.day ? s.day.charAt(0).toUpperCase() + s.day.slice(1).toLowerCase() : null,
+            subject: s.subject || "-",
+            teacher: s.teacher || "-",
+            className: s.className || "-",
+            room: s.room || "-",
           }))
           .filter(
             (s: any) =>
-              s.mataPelajaran?.nama &&
-              s.guru?.nama &&
-              s.kelas?.nama &&
-              s.hari &&
-              s.jamMulai &&
-              s.jamSelesai &&
-              DAYS.includes(s.hari)
+              s.subject !== "-" &&
+              s.day &&
+              s.startTime &&
+              s.endTime &&
+              DAYS.map(d => d.toLowerCase()).includes(s.day.toLowerCase())
           );
 
         setSchedules(validSchedules);
         if (validSchedules.length === 0) {
-          setError("Tidak ada data jadwal yang valid.");
+          setError("Belum ada data jadwal pelajaran");
         }
       } catch (e) {
         console.warn("Fetch error:", e);
-        setError("Gagal memuat data jadwal. Silakan coba lagi nanti.");
+        setError("Gagal memuat data jadwal. Silakan coba lagi nanti");
       } finally {
         setLoading(false);
       }
@@ -600,7 +667,7 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
 
   // Get unique classes
   const classes = useMemo(() => {
-    const unique = [...new Set(schedules.map((s) => s.kelas?.nama).filter(Boolean))];
+    const unique = [...new Set(schedules.map((s) => s.className).filter(Boolean))];
     return ["Semua", ...unique];
   }, [schedules]);
 
@@ -609,11 +676,11 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
     return schedules.filter((s) => {
       const matchQ =
         !q ||
-        normalize(s.mataPelajaran?.nama).includes(normalize(q)) ||
-        normalize(s.guru?.nama).includes(normalize(q)) ||
-        normalize(s.kelas?.nama).includes(normalize(q));
-      const matchDay = !day || day === "Semua" || s.hari === day;
-      const matchKelas = !kelas || kelas === "Semua" || s.kelas?.nama === kelas;
+        normalize(s.subject).includes(normalize(q)) ||
+        normalize(s.teacher).includes(normalize(q)) ||
+        normalize(s.className).includes(normalize(q));
+      const matchDay = !day || day === "Semua" || s.day === day;
+      const matchKelas = !kelas || kelas === "Semua" || s.className === kelas;
       return matchQ && matchDay && matchKelas;
     });
   }, [schedules, q, day, kelas]);
@@ -622,14 +689,14 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
   const scheduleByDay = useMemo(() => {
     const group = Object.fromEntries(DAYS.map((d) => [d, []]));
     schedules.forEach((s) => {
-      if (s.hari && group[s.hari]) group[s.hari].push(s);
+      if (s.day && group[s.day]) group[s.day].push(s);
     });
     return group;
   }, [schedules]);
 
   return (
     <section id="jadwal" className="py-12 md:py-16">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto md:px-0 px-4">
         <div className="lg:flex items-start justify-between gap-4 mb-4">
           <div>
             <motion.h2
@@ -672,7 +739,7 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className="rounded-xl border p-4 mb-4 text-left"
-            style={{ borderColor: theme.subtle, background: theme.surface, color: 'red' }}
+            style={{ borderColor: theme.subtle, background: theme.surface, color: 'BLACK' }}
           >
             {error}
           </motion.div>
@@ -786,12 +853,12 @@ const ScheduleSection = ({ theme }: { theme: any; }) => {
                         style={{ color: theme.surfaceText }}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="truncate">{s.mataPelajaran?.nama || "-"}</span>
+                          <span className="truncate">{s.subject || "-"}</span>
                           <span className="opacity-80">
-                            ({s.jamMulai} - {s.jamSelesai})
+                            ({s.startTime} - {s.endTime})
                           </span>
                         </div>
-                        <span>{s.ruang || "-"}</span>
+                        <span>{s.room || "-"}</span>
                       </motion.div>
                     ))
                   )}

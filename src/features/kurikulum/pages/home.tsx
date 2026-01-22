@@ -1,281 +1,9 @@
-// import { SMAN25_CONFIG } from "@/core/theme";
-// import { getXHostHeader } from "@/core/utils/XHostHeader";
-// import { FooterComp } from "@/features/_global/components/footer";
-// import NavbarComp from "@/features/_global/components/navbar";
-// import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { motion, useReducedMotion } from "framer-motion";
-// import { useEffect } from "react";
-
-// /****************
-//  * REACT-QUERY HOOK
-//  ****************/
-// type Dokumen = {
-//   id: string;
-//   title: string;
-//   url: string;
-//   updatedAt: string;
-// };
-
-// type JamPelajaran = {
-//   key: string;
-//   start: string;
-//   end: string;
-//   order: number;
-// };
-
-// type KurikulumData = {
-//   dokumen: Dokumen[];
-//   jamPelajaran: JamPelajaran[];
-// };
-
-// const DEMO_DATA: KurikulumData = {
-//   dokumen: [
-//     { id: "1", title: "Kurikulum Merdeka 2025", url: "https://example.com/kurikulum.pdf", updatedAt: "2025-01-15T00:00:00Z" },
-//   ],
-//   jamPelajaran: [
-//     { key: "Jam 1", start: "07:00", end: "07:45", order: 1 },
-//     { key: "Jam 2", start: "07:45", end: "08:30", order: 2 },
-//   ],
-// };
-
-// const useKurikulumData = () => {
-//   const xHost = getXHostHeader();
-
-//   return useQuery<KurikulumData, Error>({
-//     queryKey: ['kurikulum', xHost],
-//     queryFn: async () => {
-//       const res = await fetch('https://dev.kiraproject.id/kurikulum', {
-//         cache: 'no-store',
-//         headers: {
-//           'X-Host': xHost,
-//           'Cache-Control': 'no-store',
-//         },
-//       });
-//       if (!res.ok) throw new Error('Failed to fetch kurikulum data');
-//       const data = await res.json();
-//       return {
-//         dokumen: data.dokumen || [],
-//         jamPelajaran: data.jamPelajaran || [],
-//       };
-//     },
-//     staleTime: 0,
-//     gcTime: 0,
-//     refetchOnMount: true,
-//     refetchOnWindowFocus: false,
-//     placeholderData: DEMO_DATA,
-//     retry: 1,
-//   });
-// };
-
-// /****************
-//  * Curriculum Component
-//  ****************/
-// const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) => {
-//   const prefersReducedMotion = useReducedMotion();
-//   const { data = DEMO_DATA, isPending: loading, error } = useKurikulumData();
-//   const queryClient = useQueryClient();
-//   const xHost = getXHostHeader();
-
-//   // Invalidate saat ganti tenant
-//   useEffect(() => {
-//     queryClient.invalidateQueries({ queryKey: ['kurikulum'] });
-//   }, [xHost, queryClient]);
-
-//   if (loading) {
-//     return (
-//       <section id="kurikulum" className="py-12 md:py-16">
-//         <div className="max-w-6xl mx-auto px-4">
-//           <motion.p
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             style={{ color: theme.surfaceText }}
-//           >
-//             Memuat data kurikulum...
-//           </motion.p>
-//         </div>
-//       </section>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <section id="kurikulum" className="py-12 md:py-16">
-//         <div className="max-w-6xl mx-auto px-4">
-//           <motion.p
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             style={{ color: theme.pop }}
-//           >
-//             Error: {error.message}. Menggunakan data demo.
-//           </motion.p>
-//         </div>
-//       </section>
-//     );
-//   }
-
-//   return (
-//     <section id="kurikulum" className="py-12 md:py-16">
-//       <div className="max-w-6xl mx-auto px-4">
-//         <motion.h2
-//           initial={{ opacity: 0, y: 12 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true, amount: 0.4 }}
-//           transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
-//           className="text-2xl md:text-3xl font-bold mb-2"
-//           style={{ color: black }}
-//         >
-//           Kurikulum {schoolName}
-//         </motion.h2>
-
-//         <motion.p
-//           initial={{ opacity: 0, y: 8 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true, amount: 0.4 }}
-//           transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: 0.1 }}
-//           className="text-base opacity-85 mb-8"
-//           style={{ color: theme.surfaceText }}
-//         >
-//           Kurikulum dirancang untuk membentuk lulusan yang berkarakter, kompeten, dan siap kerja.
-//         </motion.p>
-
-//         {/* Documents Section */}
-//         {data.dokumen.length > 0 && (
-//           <motion.div
-//             initial={{ opacity: 0, y: 16 }}
-//             whileInView={{ opacity: 1, y: 0 }}
-//             viewport={{ once: true, amount: 0.3 }}
-//             transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: 0.2 }}
-//             className="mb-8"
-//           >
-//             <h3 className="text-xl font-semibold mb-4" style={{ color: theme.primaryText }}>
-//               Dokumen Kurikulum
-//             </h3>
-//             <div className="grid md:grid-cols-2 gap-4">
-//               {data.dokumen.map((doc, i) => (
-//                 <motion.a
-//                   key={doc.id}
-//                   href={doc.url}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   initial={{ opacity: 0, y: 12 }}
-//                   whileInView={{ opacity: 1, y: 0 }}
-//                   viewport={{ once: true, amount: 0.3 }}
-//                   transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : 0.25 + i * 0.05 }}
-//                   className="rounded-lg border p-4 hover:bg-opacity-80 transition-colors flex flex-col"
-//                   style={{ borderColor: theme.subtle, background: theme.surface }}
-//                 >
-//                   <p className="text-sm font-medium" style={{ color: theme.surfaceText }}>
-//                     {doc.title}
-//                   </p>
-//                   <p className="text-xs opacity-70 mt-1" style={{ color: theme.surfaceText }}>
-//                     Diperbarui: {new Date(doc.updatedAt).toLocaleDateString('id-ID')}
-//                   </p>
-//                 </motion.a>
-//               ))}
-//             </div>
-//           </motion.div>
-//         )}
-
-//         {/* Jam Pelajaran Section */}
-//         {data.jamPelajaran.length > 0 && (
-//           <motion.div
-//             initial={{ opacity: 0, y: 16 }}
-//             whileInView={{ opacity: 1, y: 0 }}
-//             viewport={{ once: true, amount: 0.3 }}
-//             transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: 0.3 }}
-//             className="rounded-2xl border overflow-hidden"
-//             style={{ borderColor: theme.subtle }}
-//           >
-//             <table className="w-full text-sm">
-//               <thead style={{ background: "rgba(255,255,255,0.06)" }}>
-//                 <tr>
-//                   <th className="text-left p-3" style={{ color: theme.primaryText }}>Jadwal</th>
-//                   <th className="text-left p-3" style={{ color: theme.primaryText }}>Waktu Mulai</th>
-//                   <th className="text-left p-3" style={{ color: theme.primaryText }}>Waktu Selesai</th>
-//                   <th className="text-left p-3" style={{ color: theme.primaryText }}>Urutan</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {data.jamPelajaran.map((jp, i) => (
-//                   <motion.tr
-//                     key={jp.key}
-//                     initial={{ opacity: 0, x: -20 }}
-//                     whileInView={{ opacity: 1, x: 0 }}
-//                     viewport={{ once: true, amount: 0.3 }}
-//                     transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.4 + i * 0.03 }}
-//                     className="border-t"
-//                     style={{ borderColor: theme.subtle }}
-//                   >
-//                     <td className="p-3" style={{ color: theme.surfaceText }}>{jp.key}</td>
-//                     <td className="p-3" style={{ color: theme.surfaceText }}>{jp.start}</td>
-//                     <td className="p-3" style={{ color: theme.surfaceText }}>{jp.end}</td>
-//                     <td className="p-3" style={{ color: theme.surfaceText }}>{jp.order}</td>
-//                   </motion.tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </motion.div>
-//         )}
-
-//         {data.dokumen.length === 0 && data.jamPelajaran.length === 0 && (
-//           <motion.p
-//             initial={{ opacity: 0 }}
-//             whileInView={{ opacity: 1 }}
-//             style={{ color: theme.surfaceText }}
-//           >
-//             Tidak ada data kurikulum tersedia.
-//           </motion.p>
-//         )}
-//       </div>
-//     </section>
-//   );
-// };
-
-// /****************************
-//  * PAGE WRAPPER
-//  ****************************/
-// const CurriculumPage = () => {
-//   const schoolInfo = SMAN25_CONFIG;
-//   const theme = schoolInfo.theme;
-//   const schoolName = schoolInfo.fullName;
-//   const prefersReducedMotion = useReducedMotion();
-
-//   useEffect(() => {
-//     try {
-//       console.assert(!!theme, "Theme harus ada");
-//       const keys = ["bg", "primary", "primaryText", "surface", "surfaceText", "subtle", "accent"];
-//       keys.forEach((k) => console.assert(k in theme, `Theme key '${k}' harus ada`));
-//       console.assert(typeof Curriculum === "function", "Curriculum component harus terdefinisi");
-//       console.assert(typeof NavbarComp === "function", "Navbar harus terdefinisi");
-//       console.assert(typeof FooterComp === "function", "Footer harus terdefinisi");
-
-//       console.log("UI smoke tests passed (theme, Navbar/Footer)");
-//     } catch (e) {
-//       console.error("UI smoke tests failed:", e);
-//     }
-//   }, [prefersReducedMotion, theme]);
-
-//   return (
-//     <div className="min-h-screen" style={{ background: theme.bg }}>
-//       <NavbarComp theme={theme} />
-//       <main>
-//         <Curriculum theme={theme} schoolName={schoolName} />
-//       </main>
-//       <FooterComp theme={theme} />
-//     </div>
-//   );
-// };
-
-// export default CurriculumPage;
-
-
 import { SMAN25_CONFIG } from "@/core/theme";
-import { getXHostHeader } from "@/core/utils/XHostHeader";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { FaFilePdf } from "react-icons/fa";
 
 /****************************
  * HERO SECTION UNTUK KURIKULUM
@@ -336,7 +64,7 @@ const HeroSection = () => {
 };
 
 /****************
- * REACT-QUERY HOOK
+ * FETCH HOOK (HANYA BAGIAN INI YANG DIUBAH)
  ****************/
 type Dokumen = {
   id: string;
@@ -368,32 +96,57 @@ const DEMO_DATA: KurikulumData = {
 };
 
 const useKurikulumData = () => {
-  const xHost = getXHostHeader();
+  const [data, setData] = useState<KurikulumData>(DEMO_DATA);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return useQuery<KurikulumData, Error>({
-    queryKey: ['kurikulum', xHost],
-    queryFn: async () => {
-      const res = await fetch('https://dev.kiraproject.id/kurikulum', {
-        cache: 'no-store',
-        headers: {
-          'X-Host': xHost,
-          'Cache-Control': 'no-store',
-        },
-      });
-      if (!res.ok) throw new Error('Failed to fetch kurikulum data');
-      const data = await res.json();
-      return {
-        dokumen: data.dokumen || [],
-        jamPelajaran: data.jamPelajaran || [],
-      };
-    },
-    staleTime: 0,
-    gcTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    placeholderData: DEMO_DATA,
-    retry: 1,
-  });
+  useEffect(() => {
+    const fetchKurikulum = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://be-school.kiraproject.id/kurikulum?schoolId=88`, {
+          method: "GET",
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || "Response tidak valid");
+        }
+
+        // Mapping sesuai struktur API baru
+        const mappedData: KurikulumData = {
+          dokumen: (result.data || []).map((doc: any) => ({
+            id: doc.id?.toString() || "",
+            title: doc.name || "Dokumen Kurikulum",
+            url: doc.documentUrl || "",
+            description: doc.description || "",
+            year: doc.year || "",
+            type: doc.type || "",
+            updatedAt: doc.updatedAt || new Date().toISOString(),
+          })),
+          jamPelajaran: [], // API kurikulum tidak punya jam pelajaran → kosongkan atau ambil dari API lain jika perlu
+        };
+
+        setData(mappedData);
+      } catch (err) {
+        console.warn("Fetch error:", err);
+        setError("Gagal memuat data kurikulum. Menampilkan data demo.");
+        setData(DEMO_DATA);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchKurikulum();
+  }, []); // Hanya fetch sekali saat mount
+
+  return { data, isPending: loading, error };
 };
 
 /****************
@@ -402,13 +155,6 @@ const useKurikulumData = () => {
 const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) => {
   const prefersReducedMotion = useReducedMotion();
   const { data = DEMO_DATA, isPending: loading, error } = useKurikulumData();
-  const queryClient = useQueryClient();
-  const xHost = getXHostHeader();
-
-  // Invalidate saat ganti tenant
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['kurikulum'] });
-  }, [xHost, queryClient]);
 
   if (loading) {
     return (
@@ -417,7 +163,7 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            style={{ color: theme.surfaceText }}
+            style={{ color: 'black' }}
           >
             Memuat data kurikulum...
           </motion.p>
@@ -435,7 +181,7 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
             animate={{ opacity: 1 }}
             style={{ color: 'red' }}
           >
-            Error: {error.message}. Menggunakan data demo.
+            Error: {error}. Menggunakan data demo.
           </motion.p>
         </div>
       </section>
@@ -444,16 +190,16 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
 
   return (
     <section id="kurikulum" className="py-12 md:py-16">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto flex flex-col justify-center md:items-center md:text-center">
         <motion.h2
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
-          className="text-2xl md:text-3xl font-bold mb-2"
+          className="text-2xl md:text-3xl md:px-0 px-4 md:w-max w-[90%] font-bold mb-2"
           style={{ color: 'black' }}
         >
-          Kurikulum {schoolName}
+          Kurikulum 
         </motion.h2>
 
         <motion.p
@@ -461,51 +207,81 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: 0.1 }}
-          className="text-base opacity-85 mb-8"
-          style={{ color: theme.surfaceText }}
+          className="text-base md:px-0 px-4 opacity-85 mb-8"
+          style={{ color: 'black' }}
         >
           Kurikulum dirancang untuk membentuk lulusan yang berkarakter, kompeten, dan siap kerja.
         </motion.p>
 
-        {/* Documents Section */}
+        {/* Dokumen Kurikulum - Tampilkan Deskripsi, Jenis, Tahun */}
         {data.dokumen.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: 0.2 }}
-            className="mb-8"
+            className="mb-8 md:-[36vw] md:px-0 px-4"
           >
             <h3 className="text-xl font-semibold mb-4" style={{ color: theme.primaryText }}>
-              Dokumen Kurikulum
+              Daftar Kurikulum
             </h3>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="w-full gap-6">
               {data.dokumen.map((doc, i) => (
-                <motion.a
+                <motion.div
                   key={doc.id}
-                  href={doc.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : 0.25 + i * 0.05 }}
-                  className="rounded-lg border p-4 hover:bg-opacity-80 transition-colors flex flex-col"
+                  className="rounded-xl w-full border text-left p-5 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
                   style={{ borderColor: theme.subtle, background: theme.surface }}
                 >
-                  <p className="text-sm font-medium" style={{ color: theme.surfaceText }}>
+                  {/* Judul Kurikulum */}
+                  <h4 className="text-lg font-semibold" style={{ color: theme.primaryText }}>
                     {doc.title}
-                  </p>
-                  <p className="text-xs opacity-70 mt-1" style={{ color: theme.surfaceText }}>
-                    Diperbarui: {new Date(doc.updatedAt).toLocaleDateString('id-ID')}
-                  </p>
-                </motion.a>
+                  </h4>
+
+                  {/* Jenis Kurikulum */}
+                  <div className="text-sm flex items-center gap-2">
+                    <span style={{ color: 'black' }}>Jenis:</span>
+                    <span className="font-medium px-2 text-black py-0.5 rounded-full text-sm">
+                      {doc.type || "Tidak diketahui"}
+                    </span>
+                  </div>
+
+                  {/* Tahun */}
+                  <div className="text-sm flex items-center gap-2">
+                    <span style={{ color: 'black' }}>Tahun:</span>
+                    <span className="font-medium text-black">{doc.year || "—"}</span>
+                  </div>
+
+                  {/* Deskripsi */}
+                  {doc?.description && (
+                    <p className="text-sm opacity-90 mt-1 border-t border-black/30 pt-3" style={{ color: 'black' }}>
+                      {doc?.description}
+                    </p>
+                  )}
+
+                  {/* Tombol Lihat Dokumen */}
+                  {doc.url && (
+                    <a
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center hover:brightness-95 active:scale-[0.97] justify-center gap-2 px-4 py-2 w-max mt-3 rounded-full text-sm font-medium transition-colors shadow-sm"
+                      style={{ background: theme.accent, color: "#111827" }}
+                    >
+                      <FaFilePdf className="mr-2 text-red-500" />
+                      Lihat Dokumen
+                    </a>
+                  )}
+                </motion.div>
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* Jam Pelajaran Section */}
+        {/* Jam Pelajaran Section (tetap sama seperti sebelumnya) */}
         {data.jamPelajaran.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -535,10 +311,10 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
                     className="border-t"
                     style={{ borderColor: theme.subtle }}
                   >
-                    <td className="p-3" style={{ color: theme.surfaceText }}>{jp.key}</td>
-                    <td className="p-3" style={{ color: theme.surfaceText }}>{jp.start}</td>
-                    <td className="p-3" style={{ color: theme.surfaceText }}>{jp.end}</td>
-                    <td className="p-3" style={{ color: theme.surfaceText }}>{jp.order}</td>
+                    <td className="p-3" style={{ color: 'black' }}>{jp.key}</td>
+                    <td className="p-3" style={{ color: 'black' }}>{jp.start}</td>
+                    <td className="p-3" style={{ color: 'black' }}>{jp.end}</td>
+                    <td className="p-3" style={{ color: 'black' }}>{jp.order}</td>
                   </motion.tr>
                 ))}
               </tbody>
@@ -550,7 +326,8 @@ const Curriculum = ({ theme, schoolName }: { theme: any; schoolName: string }) =
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            style={{ color: theme.surfaceText }}
+            style={{ color: 'black' }}
+            className="bg-white border border-gray-500/30 w-max rounded-md p-4"
           >
             Tidak ada data kurikulum tersedia.
           </motion.p>

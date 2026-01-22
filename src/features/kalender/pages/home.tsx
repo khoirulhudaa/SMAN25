@@ -6,6 +6,64 @@
 // import { motion, useReducedMotion } from "framer-motion";
 // import { useEffect, useMemo, useState } from "react";
 
+// /****************************
+//  * HERO SECTION UNTUK KALENDER AKADEMIK
+//  ****************************/
+// const HeroSection = () => {
+//   const scrollToKalender = () => {
+//     document.getElementById("kalender")?.scrollIntoView({ behavior: "smooth" });
+//   };
+
+//   return (
+//     <section className="relative h-[78vh] flex items-center justify-center z-[1] overflow-hidden">
+//       {/* Background Image - Representatif kalender/sekolah */}
+//       <div
+//         className="absolute inset-0 bg-contain bg-center bg-no-repeat"
+//         style={{
+//           backgroundImage: `url('/calendar.jpg')`, // Ganti dengan foto kegiatan sekolah atau kalender jika ada
+//           backgroundPosition: "center 35%",
+//         }}
+//       />
+
+//       {/* Gradient Overlay */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+
+//       {/* Content */}
+//       <div className="relative z-10 md:text-center text-left text-white px-6 max-w-5xl mx-auto">
+//         <motion.h1
+//           initial={{ opacity: 0, y: 40 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, ease: "easeOut" }}
+//           className="text-4xl md:text-6xl font-bold mb-6"
+//         >
+//           Kalender Akademik
+//         </motion.h1>
+
+//         <motion.p
+//           initial={{ opacity: 0, y: 30 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+//           className="text-lg md:text-2xl mb-12 max-w-3xl mx-auto opacity-95 drop-shadow-lg"
+//         >
+//           Agenda penting, ujian, libur, dan kegiatan sekolah SMAN 25 Jakarta sepanjang tahun
+//         </motion.p>
+
+//         <motion.button
+//           initial={{ opacity: 0, y: 40 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.9, delay: 0.4, ease: "easeOut" }}
+//           onClick={scrollToKalender}
+//           whileHover={{ scale: 1.05 }}
+//           whileTap={{ scale: 0.95 }}
+//           className="px-10 py-4 rounded-2xl bg-white text-gray-900 font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
+//         >
+//           Lihat Kalender
+//         </motion.button>
+//       </div>
+//     </section>
+//   );
+// };
+
 // /****************
 //  * UTILITIES
 //  ****************/
@@ -96,7 +154,7 @@
 //  * COMPONENTS
 //  ****************************/
 // const Legend = ({ theme }) => (
-//   <div className="flex flex-wrap gap-3">
+//   <div className="flex flex-wrap gap-3 md:mt-0 mt-10">
 //     {Object.entries(CATEGORY_COLORS).map(([k, color]) => (
 //       <div key={k} className="inline-flex items-center gap-2 text-xs">
 //         <span className="w-3 h-3 rounded-sm inline-block" style={{ background: color, border: `1px solid ${theme.subtle}` }} />
@@ -198,8 +256,8 @@
 
 //   return (
 //     <section id="kalender" className="py-12 md:py-16">
-//       <div className="max-w-6xl mx-auto px-4">
-//         <div className="flex items-start justify-between gap-4 mb-4">
+//       <div className="max-w-7xl mx-auto">
+//         <div className="md:flex items-start justify-between gap-4 mb-4">
 //           <div>
 //             <motion.h2
 //               initial={{ opacity: 0, y: 12 }}
@@ -209,7 +267,7 @@
 //               className="text-2xl md:text-3xl font-bold"
 //               style={{ color: 'black' }}
 //             >
-//               Kalender Akademik {schoolName}
+//               Kalender Akademik
 //             </motion.h2>
 //             <motion.p
 //               initial={{ opacity: 0, y: 8 }}
@@ -343,7 +401,7 @@
 // };
 
 // /****************************
-//  * PAGE WRAPPER + TESTS
+//  * PAGE DENGAN HERO
 //  ****************************/
 // const CalendarPage = () => {
 //   const schoolInfo = SMAN25_CONFIG;
@@ -383,9 +441,14 @@
 //   return (
 //     <div className="min-h-screen" style={{ background: theme.bg }}>
 //       <NavbarComp theme={theme} />
+
+//       {/* HERO SECTION */}
+//       <HeroSection />
+
 //       <main>
 //         <CalendarSection theme={theme} schoolName={schoolName} />
 //       </main>
+
 //       <FooterComp theme={theme} />
 //     </div>
 //   );
@@ -396,10 +459,8 @@
 
 
 import { SMAN25_CONFIG } from "@/core/theme";
-import { getXHostHeader } from "@/core/utils/XHostHeader";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
@@ -492,40 +553,60 @@ const DEMO_EVENTS = [
 ];
 
 /****************************
- * REACT QUERY HOOK
+ * FETCH HOOK (HANYA BAGIAN INI YANG DIUBAH)
  ****************************/
 const useCalendarEvents = (year, month) => {
-  const xHost = getXHostHeader();
+  const [events, setEvents] = useState<any[]>(DEMO_EVENTS);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return useQuery({
-    queryKey: ['kalender', xHost],
-    queryFn: async () => {
-      const res = await fetch(`https://dev.kiraproject.id/kalender`, {
-        cache: 'no-store',
-        headers: {
-          'X-Host': xHost,
-          'Cache-Control': 'no-store',
-        },
-      });
-      if (!res.ok) throw new Error('Failed to fetch calendar events');
-      const data = await res.json();
-      return data.events.map(e => ({
-        title: e.note,
-        date: e.startTime.split('T')[0],
-        category: e.category || 'Umum',
-        description: e.description,
-        startTime: e.startTime,
-        endTime: e.endTime,
-        id: e.id,
-      }));
-    },
-    staleTime: 0,
-    gcTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    placeholderData: DEMO_EVENTS,
-    retry: 1,
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://be-school.kiraproject.id/kalender?schoolId=88`, {
+          method: "GET",
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.message || "Response tidak valid");
+        }
+
+        // Mapping sesuai struktur API baru
+        const mappedEvents = (result.data || []).map((e: any) => ({
+          title: e.title || "Tidak ada judul",
+          date: e.date || "",
+          category: e.category || "Umum",
+          description: e.description || "",
+          startTime: e.startTime || null,
+          endTime: e.endTime || null,
+          id: e.id,
+        }));
+
+        setEvents(mappedEvents);
+        if (mappedEvents.length === 0) {
+          setError("Belum ada agenda untuk bulan ini.");
+        }
+      } catch (err) {
+        console.warn("Fetch error:", err);
+        setError("Gagal memuat data kalender. Menampilkan data demo.");
+        setEvents(DEMO_EVENTS);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [year, month]); // Re-fetch saat bulan/tahun berubah
+
+  return { data: events, isPending: loading, error };
 };
 
 /****************************
@@ -578,7 +659,7 @@ const DayCell = ({ theme, day, inMonth, isToday, events }) => {
           {day}
         </div>
         {isToday && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'black', color: "#111827" }}>
+          <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-green-600 text-white">
             Hari ini
           </span>
         )}
@@ -591,9 +672,8 @@ const DayCell = ({ theme, day, inMonth, isToday, events }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : i * 0.05 }}
-            className="text-[11px] truncate px-1 py-0.5 rounded"
+            className="text-[11px] truncate px-1 py-0.5 rounded text-white bg-blue-600"
             title={e.title}
-            style={{ background: CATEGORY_COLORS[e.category] || 'black', color: "#111827" }}
           >
             {e.title}
           </motion.div>
@@ -616,31 +696,32 @@ export const CalendarSection = ({ theme, schoolName, initialDate = new Date() })
     const now = initialDate instanceof Date ? initialDate : new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
-  const [activeCat] = useState(() => Object.keys(CATEGORY_COLORS).reduce((acc, k) => (acc[k] = true, acc), {}));
+  // const [activeCat] = useState(() => Object.keys(CATEGORY_COLORS).reduce((acc, k) => (acc[k] = true, acc), {}));
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
   const { data: events = DEMO_EVENTS, isPending: loading, error } = useCalendarEvents(year, month);
-  const queryClient = useQueryClient();
-  const xHost = getXHostHeader();
-
-  // Invalidate saat ganti tenant
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['kalender'] });
-  }, [xHost, queryClient]);
 
   const { cells } = useMonthMatrix(year, month);
 
-  const eventsByDay = useMemo(() => {
+ const eventsByDay = useMemo(() => {
     const map = {};
+    const targetMonth = month + 1; // JS month 0-based → +1 jadi 1-12
+    const targetYear = year;
+
     for (const e of events) {
       const d = new Date(e.date + "T00:00:00");
-      const key = d.getDate();
-      map[key] = map[key] || [];
-      map[key].push(e);
+      if (
+        d.getFullYear() === targetYear &&
+        d.getMonth() + 1 === targetMonth  // pastikan bulan cocok
+      ) {
+        const key = d.getDate();
+        map[key] = map[key] || [];
+        map[key].push(e);
+      }
     }
     return map;
-  }, [events]);
+  }, [events, year, month]); // tambah dependency year & month
 
   const go = (dir) => {
     const m = new Date(year, month + dir, 1);
@@ -653,7 +734,7 @@ export const CalendarSection = ({ theme, schoolName, initialDate = new Date() })
 
   return (
     <section id="kalender" className="py-12 md:py-16">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto md:px-0 px-4">
         <div className="md:flex items-start justify-between gap-4 mb-4">
           <div>
             <motion.h2
@@ -677,7 +758,7 @@ export const CalendarSection = ({ theme, schoolName, initialDate = new Date() })
               Agenda akademik, kesiswaan, dinas, ujian, dan libur resmi.
             </motion.p>
           </div>
-          <Legend theme={theme} />
+          {/* <Legend theme={theme} /> */}
         </div>
 
         {loading && (
@@ -694,10 +775,10 @@ export const CalendarSection = ({ theme, schoolName, initialDate = new Date() })
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-sm"
-            style={{ color: theme.pop }}
+            className="text-sm bg-white border border-gray-500/30 p-4"
+            style={{ color: 'black' }}
           >
-            Error: {error.message}. Menggunakan data demo.
+            {error}.
           </motion.div>
         )}
 

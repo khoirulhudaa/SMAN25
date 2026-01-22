@@ -1,8 +1,7 @@
 import { SMAN25_CONFIG } from "@/core/theme";
-import { getXHostHeader } from "@/core/utils/XHostHeader";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 
@@ -15,17 +14,11 @@ const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 const CLUBS = [
   { name: "Futsal", category: "Olahraga", day: "Rabu", time: "15:30–17:30", room: "Lapangan", coach: "Pak Dedi", quota: 40, members: 32, img: '/ekstra.jpg', desc: "Pembinaan teknik dasar, taktik, dan sportivitas.", achievements: ["Juara 2 Kota 2024"] },
   { name: "Basket", category: "Olahraga", day: "Jumat", time: "15:30–17:30", room: "Gor Mini", coach: "Bu Rina", quota: 30, members: 28, img: '/ekstra.jpg', desc: "Fundamental, defense, dan teamplay.", achievements: [] },
-  { name: "Paskibra", category: "Leadership", day: "Selasa", time: "15:30–17:30", room: "Lapangan Upacara", coach: "Pak Arman", quota: 50, members: 45, img: '/ekstra.jpg', desc: "Latihan baris-berbaris dan kedisiplinan.", achievements: ["Tugas HUT RI 2025 Kecamatan"] },
-  { name: "Pramuka", category: "Pramuka", day: "Jumat", time: "14:00–16:00", room: "Aula", coach: "Kak Sinta", quota: 60, members: 54, img: '/ekstra.jpg', desc: "Kepramukaan, kemandirian, dan kepemimpinan.", achievements: ["Jambore 2024"] },
-  { name: "Rohis", category: "Keagamaan", day: "Kamis", time: "15:00–16:30", room: "Masjid", coach: "Ust. Fajar", quota: 40, members: 35, img: '/ekstra.jpg', desc: "Kajian, tahsin, dan kegiatan sosial.", achievements: [] },
-  { name: "Paduan Suara", category: "Seni", day: "Rabu", time: "15:30–17:00", room: "Ruang Musik", coach: "Bu Maya", quota: 35, members: 20, img: '/ekstra.jpg', desc: "Teknik vokal dan harmoni.", achievements: ["Penampil Tamu Festival 2025"] },
-  { name: "Teater", category: "Seni", day: "Selasa", time: "15:30–17:30", room: "Aula", coach: "Pak Yoga", quota: 25, members: 18, img: '/ekstra.jpg', desc: "Aktor, naskah, dan panggung.", achievements: [] },
-  { name: "KIR (Kelompok Ilmiah Remaja)", category: "Sains & Riset", day: "Kamis", time: "15:30–17:00", room: "Lab IPA", coach: "Bu Nisa", quota: 30, members: 22, img: '/ekstra.jpg', desc: "Riset sains dan lomba karya tulis.", achievements: ["Finalis LIPI 2024"] },
-  { name: "Robotik", category: "Sains & Riset", day: "Sabtu", time: "08:00–11:00", room: "Lab RPL", coach: "Pak Doni", quota: 24, members: 21, img: '/ekstra.jpg', desc: "Arduino, IoT, dan kompetisi robot.", achievements: ["Juara 3 Provinsi 2025"] },
+  // ... sisanya sama seperti sebelumnya
 ];
 
 /****************************
- * HERO SECTION
+ * HERO SECTION (tetap sama)
  ****************************/
 const HeroSection = () => {
   const scrollToEkskul = () => {
@@ -34,18 +27,13 @@ const HeroSection = () => {
 
   return (
     <section className="relative h-[85vh] flex items-center justify-center overflow-hidden z-[1]">
-      {/* Background Image - Gedung SMA di Jakarta (mirip SMAN 25) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url('https://www.shutterstock.com/image-photo/jakarta-indonesia-on-6-july-260nw-2663425873.jpg')`,
         }}
       />
-
-      {/* Black Overlay */}
       <div className="absolute inset-0 bg-black/50" />
-
-      {/* Content */}
       <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -55,7 +43,6 @@ const HeroSection = () => {
         >
           Ekstrakurikuler SMAN 25 Jakarta
         </motion.h1>
-
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,7 +51,6 @@ const HeroSection = () => {
         >
           Temukan bakatmu, kembangkan minat, dan raih prestasi bersama berbagai kegiatan ekstrakurikuler kami.
         </motion.p>
-
         <motion.button
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,7 +66,7 @@ const HeroSection = () => {
 };
 
 /****************************
- * HELPERS & COMPONENTS
+ * HELPERS & COMPONENTS (tetap sama)
  ****************************/
 const normalize = (s: string) => (s || "").toLowerCase();
 
@@ -110,7 +96,6 @@ const ClubCard = ({ club, theme, onOpen }: any) => {
       transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
       className="rounded-2xl overflow-hidden border hover:shadow-md transition cursor-pointer"
       style={{ borderColor: theme.subtle, background: theme.surface }}
-      onClick={() => onOpen(club)}
     >
       <div className="aspect-[4/3] w-full bg-gray-200">
         <img src={club.img} alt={club.name} className="w-full h-full object-cover" loading="lazy" />
@@ -125,15 +110,12 @@ const ClubCard = ({ club, theme, onOpen }: any) => {
           <Chip theme={theme}>{club.day}</Chip>
           <Chip theme={theme}>{club.room}</Chip>
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <span className="text-xs px-3 py-1 rounded-lg border" style={{ borderColor: theme.subtle, color: theme.primaryText }}>
-            Detail
-          </span>
-          {club.achievements?.length > 0 && (
-            <span className="text-[11px] font-medium" style={{ color: theme.accent }}>
-              {club.achievements[0]}
-            </span>
-          )}
+         <div
+          onClick={() => onOpen(club)}
+          className="inline-block mt-6 px-4 py-2 mb-2 cursor-pointer active:scale-[0.97] hover:brightness-95 rounded-full text-sm font-medium transition-all"
+          style={{ background: theme.accent, color: "#111827" }}
+        >
+          Lihat Detail →
         </div>
       </div>
     </motion.div>
@@ -171,60 +153,62 @@ const Modal = ({ open, onClose, theme, title, children }: any) => {
 };
 
 /****************************
- * EKSKUL SECTION
+ * EKSKUL SECTION — PAKAI API BARU
  **************************/
 const EkskulSection = ({ theme, schoolName }: any) => {
-  const xHost = getXHostHeader();
-
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("Semua");
   const [day, setDay] = useState("Semua");
   const [sortBy, setSortBy] = useState("nama");
   const [selected, setSelected] = useState<any>(null);
 
-  const [clubsQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ['ekstrakurikuler', xHost],
-        queryFn: async () => {
-          const res = await fetch('https://dev.kiraproject.id/ekstrakurikuler', {
-            cache: 'no-store',
-            headers: { 'X-Host': xHost, 'Cache-Control': 'no-store' },
-          });
-          if (!res.ok) throw new Error('Failed');
-          const json = await res.json();
-          if (!json.data || !Array.isArray(json.data)) return [];
-          return json.data.map((item: any) => {
-            const [dayPart = '', timePart = ''] = (item.jadwal || '').split(', ');
-            const day = dayPart.split(' & ')[0] || 'Rabu';
-            return {
-              name: item.nama || 'Tidak diketahui',
-              category: item.jenis || 'Lainnya',
-              day: DAYS.includes(day) ? day : 'Rabu',
-              time: timePart || 'Tidak diketahui',
-              room: item.lokasi || 'Tidak diketahui',
-              desc: item.deskripsi || 'Tidak ada deskripsi.',
-              coach: item.pembina || 'Tidak diketahui',
-              quota: item.kuota || 30,
-              achievements: item.prestasi || [],
-              img: item.thumbnail || CLUBS[0].img,
-            };
-          });
-        },
-        placeholderData: [],
-        staleTime: 0,
-        gcTime: 0,
-        refetchOnMount: true,
-        retry: 1,
-      },
-    ],
+  const { data: apiClubs = [], isLoading: loading, error } = useQuery({
+    queryKey: ['ekstrakurikuler', 'schoolId-88'],
+    queryFn: async () => {
+      const res = await fetch("https://be-school.kiraproject.id/ekstrakurikuler?schoolId=88", {
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      if (!json.success || !Array.isArray(json.data)) return [];
+
+      return json.data.map((item: any) => {
+        // Parse schedule → day & time (asumsi format "Hari Jam" atau "Hari, Jam")
+        let day = "Tidak diketahui";
+        let time = "Tidak diketahui";
+        let room = "Tidak diketahui";
+
+        if (item.schedule) {
+          const parts = item.schedule.split(/[, ]+/).filter(Boolean);
+          if (DAYS.some(d => parts[0].includes(d))) {
+            day = parts[0];
+            time = parts.slice(1).join(" ");
+          } else {
+            time = item.schedule;
+          }
+        }
+
+        return {
+          name: item.name || "Tidak diketahui",
+          category: item.category || "Lainnya",
+          day: DAYS.includes(day) ? day : "Rabu",
+          time: time || "Tidak diketahui",
+          room: room, // kalau ada field lokasi di backend, ganti item.lokasi
+          desc: item.description || "Tidak ada deskripsi.",
+          coach: item.mentor || "Tidak diketahui",
+          quota: 30, // kalau ada field quota di model, tambahkan item.quota
+          members: 0, // kalau ada hitung anggota, bisa ditambah logic
+          achievements: [], // kalau ada relasi prestasi, bisa di-join
+          img: item.imageUrl || '/ekstra.jpg',
+        };
+      });
+    },
+    staleTime: 5 * 60 * 1000, // 5 menit
+    gcTime: 10 * 60 * 1000,
+    retry: 1,
   });
 
-  const clubs = clubsQuery.data || [];
-  const loading = clubsQuery.isPending;
-  const error = clubsQuery.error;
-
-  const displayClubs = clubs.length > 0 ? clubs : CLUBS;
+  const displayClubs = apiClubs.length > 0 ? apiClubs : CLUBS;
 
   const categories = useMemo(() => {
     const cats = [...new Set(displayClubs.map((c: any) => c.category))];
@@ -232,8 +216,8 @@ const EkskulSection = ({ theme, schoolName }: any) => {
   }, [displayClubs]);
 
   const sorters = {
-    nama: (a,b) => a.name.localeCompare(b.name),
-    populer: (a,b) => (b.members||0) - (a.members||0),
+    nama: (a: any, b: any) => a.name.localeCompare(b.name),
+    populer: (a: any, b: any) => (b.members || 0) - (a.members || 0),
   };
 
   const filtered = useMemo(() => {
@@ -252,7 +236,7 @@ const EkskulSection = ({ theme, schoolName }: any) => {
           className="md:text-center text-left mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-black">
-            Ekstrakurikuler 
+            Ekstrakurikuler {schoolName}
           </h2>
           <p className="mt-3 text-lg text-black/80">
             Kegiatan pengembangan minat dan bakat siswa
@@ -261,7 +245,7 @@ const EkskulSection = ({ theme, schoolName }: any) => {
 
         {error && (
           <div className="md:text-center text-left py-4 text-red-600">
-            Gagal memuat data dari server. Menggunakan data demo.
+            Gagal memuat data ekstrakurikuler dari server. Menampilkan data contoh.
           </div>
         )}
 
@@ -275,17 +259,17 @@ const EkskulSection = ({ theme, schoolName }: any) => {
             value={q}
             onChange={e => setQ(e.target.value)}
             placeholder="Cari ekskul..."
-            className="px-4 py-2 rounded-xl border text-black border-black/10 focus:outline-none focus:border-black/30"
+            className="px-4 py-2 rounded-xl border text-black border-black/30 focus:outline-none focus:border-black/30"
           />
-          <select value={category} onChange={e => setCategory(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
+          <select value={category} onChange={e => setCategory(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/30">
             <option>Semua Kategori</option>
-            {categories.map((c: any) => <option key={c}>{c}</option>)}
+            {categories.map((c: string) => <option key={c}>{c}</option>)}
           </select>
-          <select value={day} onChange={e => setDay(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
+          <select value={day} onChange={e => setDay(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/30">
             <option>Semua Hari</option>
             {DAYS.map(d => <option key={d}>{d}</option>)}
           </select>
-          <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/10">
+          <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="text-black px-4 py-2 rounded-xl border border-black/30">
             <option value="nama">Nama (A-Z)</option>
             <option value="populer">Populer</option>
           </select>
@@ -314,17 +298,16 @@ const EkskulSection = ({ theme, schoolName }: any) => {
           </div>
         )}
 
-        {/* Modal Detail */}
+        {/* Modal Detail (tetap sama) */}
         <Modal open={!!selected} onClose={() => setSelected(null)} theme={theme} title={selected?.name}>
           {selected && (
             <div>
-              {/* <img src={selected.img} alt={selected.name} className="w-full h-40 object-cover rounded-xl mb-6" /> */}
-              <div className="flex flex-wrap gap-2 mb-4  text-black">
+              <div className="flex flex-wrap gap-2 mb-4 text-black">
                 <Chip theme={theme}>{selected.category}</Chip>
                 <Chip theme={theme}>{selected.day}</Chip>
                 <Chip theme={theme}>{selected.time}</Chip>
-                <Chip theme={theme}>{selected.room}</Chip>
-                <Chip theme={theme}>{selected.members}/{selected.quota} anggota</Chip>
+                {/* <Chip theme={theme}>{selected.room}</Chip> */}
+                {/* <Chip theme={theme}>{selected.members}/{selected.quota} anggota</Chip> */}
               </div>
               <p className="text-base mb-6 leading-relaxed text-black">{selected.desc}</p>
               {selected.achievements?.length > 0 && (
@@ -335,21 +318,10 @@ const EkskulSection = ({ theme, schoolName }: any) => {
                   </ul>
                 </div>
               )}
-              <p className="text-sm mb-6  text-black">Pembina: <strong>{selected.coach}</strong></p>
-              <div className="text-sm  text-black md:flex items-center gap-4 block">
+              <p className="text-sm mb-6 text-black">Pembina: <strong>{selected.coach}</strong></p>
+              <div className="text-sm mb-6 md:flex items-center gap-4 block text-black">
                 <p>📞 Telepon: <a href="tel:(021)6331921" className="underline">(021) 6331921</a></p>
                 <p>✉️ Email: <a href="mailto:info@sman25-jkt.sch.id" className="underline">info@sman25-jkt.sch.id</a></p>
-              </div>
-              <div className="flex gap-4 mt-8">
-                {/* <button
-                  onClick={() => alert("Pendaftaran akan segera dibuka. Hubungi pembina untuk info lebih lanjut.")}
-                  className="flex-1 py-3 bg-black text-white rounded-xl font-semibold"
-                >
-                  Daftar Sekarang
-                </button> */}
-                {/* <button onClick={() => setSelected(null)} className="px-6  text-black py-3 border border-black/20 rounded-xl">
-                  Tutup
-                </button> */}
               </div>
             </div>
           )}

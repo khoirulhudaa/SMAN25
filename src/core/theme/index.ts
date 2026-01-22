@@ -12,6 +12,7 @@ export const SMAN25_THEME = {
 
 // === INFO SEKOLAH ===
 export const SMAN25_INFO = {
+  id: 88,
   type: "SMAN" as const,
   number: "25" as const,
   city: "Jakarta" as const,

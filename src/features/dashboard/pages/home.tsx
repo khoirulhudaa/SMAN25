@@ -5,7 +5,7 @@ import GalleryComp from "@/features/_global/components/galeri";
 import NavbarComp from "@/features/_global/components/navbar";
 import { queryClient } from "@/features/_root/queryClient";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Calendar, FileCheck, Thermometer, TrendingUp, UserCheck, UserX } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -49,29 +49,6 @@ const Badge = ({ children, theme }: any) => (
     {children}
   </span>
 );
-
-// Hooks tetap sama (tidak berubah)
-const useHeroSlides = () => {
-  const xHost = getXHostHeader();
-  return useQuery({
-    queryKey: ['heroSlides', xHost],
-    queryFn: async () => {
-      const res = await fetch("https://dev.kiraproject.id/beranda", {
-        cache: 'no-store',
-        headers: { 'X-Host': xHost, 'Cache-Control': 'no-store' },
-      });
-      if (!res.ok) throw new Error("Failed to fetch hero slides");
-      const data = await res.json();
-      return data.heroSlides.map((s: any) => ({
-        title: s.title,
-        desc: s.desc,
-        img: s.img,
-        cta1: { href: s.cta1Href || "#", label: s.cta1Label || "Lihat Detail" },
-        cta2: { href: s.cta2Href || "#", label: s.cta2Label || "Pelajari Lebih" },
-      }));
-    },
-  });
-};
 
 const useStats = () => {
   const xHost = getXHostHeader();
@@ -166,95 +143,92 @@ const useNews = () => {
   });
 };
 
+// Hook baru untuk profil sekolah (hanya ini yang ditambah)
+const useSchoolProfile = () => {
+  const schoolId = 25; // ← sesuaikan dengan ID sekolah yang ada di database
+
+  const API_BASE = 'https://be-school.kiraproject.id';
+    // ? 'http://localhost:5005' 
+    // : 'https://be-school.kiraproject.id'; // sesuaikan URL production
+
+  return useQuery({
+    queryKey: ['schoolProfile', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/profileSekolah?schoolId=${schoolId}`, {
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(`Gagal mengambil profil sekolah: ${res.status}`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Response tidak valid");
+      return data.data; // null atau objek profil
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+
+// ──────────────────────────────────────────────────────────────
+// Hero - tetap layout & style asli, hanya ganti teks dari profil
+// ──────────────────────────────────────────────────────────────
+
 const Hero = ({ theme }: any) => {
+  const { data: profile, isPending } = useSchoolProfile();
 
-  const dataHero = [
-     { title: "SEKOLAH BERPRESTASI DAN BERKARAKTER", subTitle: "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda.", img: "/hero2.png" },
-  ]
-  // HeroSlider sederhana mirip referensi, menggunakan data API
-  const { data: heroSlides = [], isPending } = useHeroSlides();
-  const [index, setIndex] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
-  const handlers = useSwipeable({ onSwipedLeft: () => setIndex((i) => (i + 1) % heroSlides.length), onSwipedRight: () => setIndex((i) => (i - 1 + heroSlides.length) % heroSlides.length) });
+  const title = isPending || !profile?.heroTitle 
+    ? "SEKOLAH BERPRESTASI DAN BERKARAKTER" 
+    : profile.heroTitle;
 
-  useEffect(() => {
-    if (prefersReducedMotion || heroSlides.length <= 1) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % heroSlides.length), 6000);
-    return () => clearInterval(t);
-  }, [prefersReducedMotion, heroSlides.length]);
-
-  if (isPending || heroSlides.length === 0) return <div className="h-[80vh] bg-gray-200 flex items-center justify-center">Loading Hero...</div>;
-
-  // const slide = dataHero[index];
+  const subTitle = isPending || !profile?.heroSubTitle 
+    ? "Jadilah bagian dari generasi berprestasi dengan fasilitas modern, pembelajaran inovatif, dan kegiatan ekstrakurikuler yang mendukung potensi terbaik Anda." 
+    : profile.heroSubTitle;
 
   return (
-    <div className="relative h-[80vh] md:h-[85vh] overflow-hidden" {...handlers}>
-      {
-        dataHero.map((d: any, i: number) => (
-          <div key={i}>
-            <SafeImage src={`${d.img}`} alt={d.title} className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/60" />
-            <div className="absolute md:px-0 px-5 mt-[-20px] w-full mx-auto h-full flex flex-col text-left md:text-center md:items-center md:justify-center text-white">
-              <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} className="text-left md:text-center w-full h-full flex flex-col justify-center items-center leading-loose">
-                <h1 className="text-3xl md:text-6xl md:w-[80%] leading-[30px] h-max font-bold relative">{d.title}</h1>
-                <p className="mt-6 text-md md:text-lg md:max-w-3xl text-gray-300">{d.subTitle}</p>
-                <div className="mt-8 flex gap-4 w-full items-center justify-center">
-                  <a href={"#keunggulan"} className="md:w-max w-full px-8 py-4 rounded-md md:rounded-md font-semibold text-white bg-blue-500 shadow-lg">{"Telusuri Sekarang"}</a>
-                  {/* <a href={d.cta2.href} className="px-8 py-4 rounded-full font-semibold border-2 border-white">{d.cta2.label}</a> */}
-                </div>
-              </motion.div>
-            </div>
+    <div className="relative h-[80vh] md:h-[85vh] overflow-hidden">
+      <SafeImage src="/hero2.png" alt={title} className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/60" />
+      <div className="absolute md:px-0 px-5 mt-[-20px] w-full mx-auto h-full flex flex-col text-left md:text-center md:items-center md:justify-center text-white">
+        <motion.div initial={{ opacity: 0, y: 0 }} animate={{ opacity: 1, y: 0 }} className="text-left md:text-center w-full h-full flex flex-col justify-center items-center leading-loose">
+          <h1 className="text-3xl md:text-6xl md:w-[80%] leading-[35px] md:leading-tight h-max font-bold relative">{title}</h1>
+          <p className="mt-6 text-md md:text-lg w-[100%] md:max-w-[70%] leading-loose text-gray-300">{subTitle}</p>
+          <div className="mt-8 flex gap-4 w-full items-center justify-center">
+            <a href={"#keunggulan"} className="md:w-max w-full px-8 py-4 rounded-md md:rounded-md font-semibold text-white bg-blue-500 shadow-lg">{"Telusuri Sekarang"}</a>
           </div>
-        ))
-      }
+        </motion.div>
+      </div>
     </div>
   );
 };
 
-const KeunggulanSection = ({ theme }: any) => {
-  const keunggulan = [
-    { icon: '/i3.png', title: 'Fasilitas Modern', description: 'Kami menyediakan fasilitas lengkap seperti perpustakaan, laboratorium, dan ruang olahraga untuk mendukung kegiatan pembelajaran.' },
-    { icon: '/i2.png', title: 'Guru Berpengalaman', description: 'Tenaga pendidik kami memiliki pengalaman dan dedikasi tinggi untuk memberikan pendidikan terbaik kepada siswa.' },
-    { icon: '/i1.png', title: 'Prestasi Siswa', description: 'Raih prestasi di tingkat lokal, nasional, hingga internasional, dengan bimbingan dari tenaga pendidik profesional.' },
-  ];
-
-  return (
-    <section className="relative" id="keunggulan">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* <h2 className="text-3xl md:text-4xl font-bold text-left md:text-center mb-12" style={{ color: 'black' }}>Keunggulan Kami</h2> */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {keunggulan.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                        className="bg-white flex md:items-center justify-start flex-col rounded-xl shadow-lg p-5 md:p-8 hover:shadow-2xl transition-shadow text-left md:text-center">
-              <img src={item.icon} alt="icon" className="w-10 md:w-16 h-10 md:h-16 mb-4" />
-              <h3 className="text-2xl font-semibold mb-4" style={{ color: 'black' }}>{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
+// ──────────────────────────────────────────────────────────────
+// SambutanSection - layout & style persis sama, hanya data dari profil
+// ──────────────────────────────────────────────────────────────
 
 const SambutanSection = ({ theme }: any) => {
-  const [sambutanQuery] = useSambutanAndHeadmasters();
+  const [sambutanQuery, headmastersQuery] = useSambutanAndHeadmasters();
+  const { data: profile, isPending: profilePending } = useSchoolProfile();
+
   const sambutan = sambutanQuery.data;
 
-  if (sambutanQuery.isPending) return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
+  if (sambutanQuery.isPending || profilePending) {
+    return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
+  }
+
+  // Gunakan data dari profil jika ada, fallback ke nilai asli
+  const headmasterName    = profile?.headmasterName   || sambutan?.name || "Kepala Sekolah";
+  const headmasterWelcome = profile?.headmasterWelcome || "Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.";
+  const photoUrl          = profile?.photoHeadmasterUrl || "/kapalaSekolah.png";
+  const schoolName        = profile?.schoolName       || "SMAN 25 Jakarta";
 
   const stats = [
-    { value: "540 +", label: "Peserta Didik" },
-    { value: "45 +", label: "Guru Tendik" },
-    { value: "30 +", label: "Ruangan" },
-    { value: "100", label: "Penghargaan" },
+    { value: profile?.studentCount ? `${profile.studentCount} +` : "540 +", label: "Peserta Didik" },
+    { value: profile?.teacherCount ? `${profile.teacherCount} +` : "45 +",  label: "Guru Tendik" },
+    { value: profile?.roomCount    ? `${profile.roomCount} +`    : "30 +",  label: "Ruangan" },
+    { value: profile?.achievementCount ? profile.achievementCount : "100", label: "Penghargaan" },
   ];
 
   return (
     <section 
       className="pt-10 md:pt-16 pb-16 md:pb-24 z-[1] bg-white relative overflow-hidden"
-      // Background dots yang lebih terlihat dan elegan
       style={{
         backgroundColor: '#ffffff',
         backgroundImage: `
@@ -280,35 +254,27 @@ const SambutanSection = ({ theme }: any) => {
               />
             </div>
 
-            {/* Foto Kepala Sekolah */}
             <div className="relative rounded-2xl overflow-hidden">
               <SafeImage 
-                // src={sambutan?.photo ? `https://dev.kiraproject.id${sambutan.photo}` : "/kapalaSekolah.png"}
-                src='/kapalaSekolah.png'
-                alt="Kepala Sekolah" 
-                className="w-full h-[400px] md:h-[300px] object-contain" 
+                src={photoUrl}
+                alt="Kepala Sekolah"
+                className="w-full h-[400px] md:h-[460px] object-contain" 
               />
             </div>
           </div>
 
-          {/* Bagian Kanan: Teks + Stats */}
           <div className="flex flex-col justify-center space-y-8">
             <div className="text-lg text-gray-700 leading-relaxed space-y-4">
-              {sambutan?.text.split("\n").map((p: string, i: number) => (
+              {headmasterWelcome.split("\n").map((p: string, i: number) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-            {/* <p className="text-lg text-gray-700 leading-relaxed space-y-4 md:w-[80%] mx-auto text-left md:text-center">
-              Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.
-            </p> */}
 
-            {/* Signature */}
             <div className="mt-8">
-              <p className="text-2xl font-bold" style={{ color: 'black' }}>{sambutan?.name}</p>
-              <p className="text-gray-600 text-lg">Kepala Sekolah SMAN 25 Jakarta</p>
+              <p className="text-2xl font-bold" style={{ color: 'black' }}>{headmasterName}</p>
+              <p className="text-gray-600 text-lg">Kepala Sekolah {schoolName}</p>
             </div>
 
-            {/* Stats Box */}
             <div className="hidden md:grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
               {stats.map((stat, i) => (
                 <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center relative">
@@ -444,6 +410,65 @@ const BeritaSection = ({ theme }: any) => {
 };
 
 const VideoSection = ({ theme }: any) => {
+  const { data: profile, isPending } = useSchoolProfile();
+
+  // Fungsi sederhana untuk ekstrak YouTube video ID dari berbagai format URL
+  const getYouTubeId = (url: string | null | undefined): string | null => {
+    if (!url) return null;
+
+    // Regex untuk menangkap ID dari berbagai format: youtu.be, youtube.com/watch?v=, embed/, dll.
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = getYouTubeId(profile?.linkYoutube);
+
+  // Jika masih loading atau tidak ada video
+  if (isPending) {
+    return (
+      <section className="md:py-6">
+        <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
+          <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
+            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
+            Kegiatan Sekolah dalam Video
+          </motion.h2>
+          <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">Memuat video...</p>
+          <div className="max-w-7xl mx-auto">
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gray-200 animate-pulse" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Jika tidak ada linkYoutube atau ID tidak valid → fallback ke pesan atau video default
+  if (!videoId) {
+    return (
+      <section className="md:py-6">
+        <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
+          <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
+            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
+            Kegiatan Sekolah dalam Video
+          </motion.h2>
+          <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">
+            Video kegiatan sekolah belum tersedia
+          </p>
+          {/* Opsional: tampilkan placeholder atau gambar */}
+          <div className="max-w-7xl mx-auto">
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gray-200 flex items-center justify-center">
+              <p className="text-gray-500 text-lg">Tidak ada video saat ini</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Embed URL yang benar
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
   return (
     <section className="md:py-6">
       <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
@@ -451,15 +476,18 @@ const VideoSection = ({ theme }: any) => {
           className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
           Kegiatan Sekolah dalam Video
         </motion.h2>
-        <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">Kegiatan Senam Pagi SMAN 25 Jakarta – Jumat, 7 Juni 2024</p>
+        {/* Gunakan deskripsi dinamis jika ingin, atau tetap statis */}
+        <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">
+          {profile?.heroTitle || "Kegiatan Senam Pagi SMAN 25 Jakarta – Jumat, 7 Juni 2024"}
+        </p>
 
         <div className="max-w-7xl mx-auto">
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
             <iframe 
               width="100%" 
               height="100%" 
-              src="https://www.youtube.com/embed/xALb_5ANJ1w" 
-              title="Kegiatan Senam Pagi SMAN 25 Jakarta, Jumat 7 Juni 2024" 
+              src={embedUrl}
+              title={`Video dari ${profile?.schoolName || 'SMAN 25 Jakarta'}`}
               frameBorder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
               referrerPolicy="strict-origin-when-cross-origin" 
@@ -472,6 +500,7 @@ const VideoSection = ({ theme }: any) => {
     </section>
   );
 };
+
 const InstagramFeedSection = ({ theme }: any) => {
   // Data post sesuai konten yang diberikan (statis, karena tidak ada akun IG resmi)
   const posts = [
@@ -650,13 +679,11 @@ const StatsBar = ({ theme }: any) => {
 };
 
 // Page utama
-const Page = ({ theme, schoolName, onTenantChange, currentKey }: any) => (
+const Page = ({ theme, onTenantChange, currentKey }: any) => (
   <div className="min-h-screen bg-white">
     <NavbarComp theme={theme} onTenantChange={onTenantChange} currentKey={currentKey} />
-    {/* GlobalInfoBar & StatsBar bisa ditambahkan di sini jika ingin */}
     <Hero theme={theme} />
     <StatsBar theme={theme} />
-    {/* <KeunggulanSection theme={theme} /> */}
     <SambutanSection theme={theme} />
     <FasilitasSection theme={theme} />
     <VideoSection theme={theme} />
@@ -672,13 +699,12 @@ const Homepage = () => {
   const schoolInfo = SMAN25_CONFIG;
   const [key, setKey] = useState(schoolInfo.fullName);
   const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
 
   useEffect(() => {
     queryClient.invalidateQueries();
   }, [key]);
 
-  return <Page theme={theme} schoolName={schoolName} onTenantChange={setKey} currentKey={key} />;
+  return <Page theme={theme} onTenantChange={setKey} currentKey={key} />;
 };
 
 export default Homepage;

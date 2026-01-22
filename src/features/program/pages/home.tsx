@@ -2,11 +2,29 @@ import { SMAN25_CONFIG } from "@/core/theme";
 import { FooterComp } from "@/features/_global/components/footer";
 import NavbarComp from "@/features/_global/components/navbar";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const BASE_URL = "https://be-school.kiraproject.id";
+
+interface ProgramItem {
+  title: string;
+  description: string;
+}
+
+interface Program {
+  id: number;
+  mainTitle: string;
+  mainDescription: string | null;
+  items: ProgramItem[];
+  schoolId: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const HeroSection = () => {
   const scrollToEkskul = () => {
-    document.getElementById("ekskul")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("pro")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -15,12 +33,12 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('/pro1.webp')`,
+          backgroundImage: `url('/teacher.jpg')`,
         }}
       />
 
       {/* Black Overlay */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
       <div className="relative z-10 -mt-6 md:text-center text-left text-white px-6 max-w-4xl">
@@ -30,7 +48,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-6xl font-bold mb-4"
         >
-          Program Sekolah
+          Program
         </motion.h1>
 
         <motion.p
@@ -42,36 +60,54 @@ const HeroSection = () => {
           Berbagai program unggulan untuk pengembangan potensi siswa secara menyeluruh, akademik maupun non-akademik.
         </motion.p>
 
-        <a href="#pro">
-          <motion.button
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            onClick={scrollToEkskul}
-            className="px-8 py-4 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition shadow-lg"
-          >
-            Jelajahi Program
-          </motion.button>
-        </a>
+        <motion.button
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          onClick={scrollToEkskul}
+          className="px-8 py-4 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition shadow-lg"
+        >
+          Jelajahi Program
+        </motion.button>
       </div>
     </section>
   );
 };
 
-
-/****************************
- * PROGRAM SEKOLAH PAGE (Modern & Soft)
- ****************************/
 const ProgramSekolahPage = () => {
   const schoolInfo = SMAN25_CONFIG;
   const theme = schoolInfo.theme;
-  const schoolName = schoolInfo.fullName;
+
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simple page view tracker jika diperlukan
-    console.log("Program Sekolah Page loaded");
+    const fetchPrograms = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${BASE_URL}/program`, {
+          params: { schoolId: 88 },
+        });
+
+        if (response.data.success) {
+          setPrograms(response.data.data);
+        } else {
+          setError(response.data.message || "Gagal memuat program");
+        }
+      } catch (err) {
+        setError("Terjadi kesalahan saat mengambil data program");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrograms();
   }, []);
 
+
+  console.log(programs)
   return (
     <div className="min-h-screen" style={{ background: theme.bg }}>
       <NavbarComp theme={theme} />
@@ -81,96 +117,83 @@ const ProgramSekolahPage = () => {
 
       {/* KONTEN UTAMA */}
       <section id="pro" className="py-20 md:py-32 -mt-12 relative z-[1]">
-        <div className="max-w-6xl mx-auto px-6">
-
+        <div className="max-w-7xl mx-auto px-4 md:px-0">
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-bold md:text-center text-left mb-16"
+            className="text-2xl md:text-4xl font-bold md:text-center text-left mb-8 md:mb-16"
             style={{ color: theme.primaryText }}
           >
-            Program Unggulan
+            {programs?.[0]?.mainTitle}
           </motion.h2>
 
-          <div className="grid gap-16 md:grid-cols-3">
+          {loading ? (
+            <div className="text-center py-20">
+              <p className="text-xl" style={{ color: theme.primaryText }}>
+                Memuat program...
+              </p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 text-red-600">
+              <p>{error}</p>
+            </div>
+          ) : programs.length === 0 ? (
+            <div className="text-center py-20 opacity-70">
+              <p>Belum ada program yang tersedia saat ini.</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:gap-16 md:grid-cols-3">
+              {programs?.[0]?.items.map((program, index) => (
+                <motion.div
+                  key={program.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-6 shadow-md md:shadow-xl text-left"
+                >
+                  <div>
+                    {/* Kamu bisa ganti icon sesuai kebutuhan atau buat mapping */}
+                    <img
+                      src="/i1.png"
+                      alt="icon"
+                      className="w-12 h-12 mb-5"
+                    />
+                  </div>
+                  <div>
+                    <h3
+                      className="text-md font-bold mb-4"
+                      style={{ color: "black" }}
+                    >
+                      {program.title || 'Program Unggulan'}
+                    </h3>
 
-            {/* Program Prestasi Akademik Unggulan */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
-            >
-              <div>
-                <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
-              </div>
-              <div>
-                <h3 className="text-md font-bold mb-4" style={{ color: 'black' }}>
-                  Prestasi Akademik Unggulan
-                </h3>
-                <p className="opacity-90 text-sm" style={{ color: theme.primaryText }}>
-                  Fokus pada pembinaan siswa berprestasi di bidang olimpiade sains, kompetisi akademik nasional, dan persiapan masuk perguruan tinggi terbaik.
-                </p>
-              </div>
-            </motion.div>
+                    {program.description && (
+                      <p
+                        className="opacity-90 text-sm mb-6"
+                        style={{ color: theme.primaryText }}
+                      >
+                        {program.description}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
-            {/* Green School Initiative */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
-            >
-              <div>
-                <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
-              </div>
-              <div>
-                <h3 className="text-md font-bold mb-4" style={{ color: 'black' }}>
-                  Program Sekolah Ramah Lingkungan
-                </h3>
-                <p className="opacity-90 text-sm" style={{ color: theme.primaryText }}>
-                  Komitmen sekolah dalam menjaga lingkungan melalui pengelolaan sampah, penanaman pohon, edukasi eco-friendly, dan kegiatan konservasi alam.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Pengembangan Karakter & Kepemimpinan */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 text-left"
-            >
-              <div>
-                <img src={'/i1.png'} alt="icon" className="w-12 h-12 mb-5" />
-              </div>
-              <div>
-                <h3 className="text-md font-bold mb-4" style={{ color: 'black' }}>
-                  Pengembangan Karakter dan Kepemimpinan
-                </h3>
-                <p className="opacity-90 text-sm" style={{ color: theme.primaryText }}>
-                  Melalui OSIS, LDKS, pramuka, dan kegiatan ekstrakurikuler lainnya, siswa dibekali nilai karakter Profil Pelajar Pancasila dan jiwa kepemimpinan.
-                </p>
-              </div>
-            </motion.div>
-
-          </div>
-
-          {/* Judul Utama */}
+          {/* Bagian deskripsi & Kurikulum Merdeka tetap sama seperti sebelumnya */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl mt-20 font-bold md:text-center text-left mb-8"
+            className="text-2xl md:text-4xl mt-12 md:mt-20 font-bold md:text-center text-left mb-8"
             style={{ color: theme.primaryText }}
           >
             Program Sekolah
           </motion.h1>
 
-          {/* Deskripsi Pengantar */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -179,68 +202,61 @@ const ProgramSekolahPage = () => {
             className="text-md md:text-lg md:text-center text-left max-w-full mx-auto opacity-90 leading-relaxed"
             style={{ color: theme.surfaceText }}
           >
-            SMA Negeri 25 Jakarta memiliki berbagai program unggulan yang dirancang untuk mendukung pengembangan potensi siswa secara menyeluruh, baik di bidang akademik maupun non-akademik. Program-program ini bertujuan untuk menciptakan lulusan yang berprestasi, berkarakter, dan siap menghadapi tantangan global.
+            {programs?.[0]?.mainDescription || '-'}
           </motion.p>
 
-          {/* Kurikulum Merdeka */}
+          {/* Kurikulum Merdeka (tetap sama) */}
           <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative flex flex-col items-center mt-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative flex flex-col items-center mt-12 md:mt-20"
+          >
+            <h3
+              className="text-2xl md:text-4xl font-bold md:text-center md:flex hidden text-left mb-12"
+              style={{ color: theme.primaryText }}
             >
-              {/* Title Utama (opsional jika ingin judul di atas) */}
-              <h3 className="text-3xl md:text-4xl font-bold md:text-center md:flex hidden text-left mb-12" style={{ color: theme.primaryText }}>
-                Transformasi Pembelajaran dengan Kurikulum Merdeka
-              </h3>
+              Transformasi Pembelajaran dengan Kurikulum Merdeka
+            </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
-                {/* Gambar BEFORE */}
-                <div className="border border-gray-300 relative group rounded-3xl overflow-hidden shadow-2xl">
-                  <img
-                    src="/pro2.png"
-                    alt="Sebelum Kurikulum Merdeka"
-                    className="w-full h-96 md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-
-                  {/* Dark Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
-
-                  {/* Caption kecil di bawah */}
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <p className="text-white text-lg md:text-xl font-medium drop-shadow-lg">
-                      BEFORE
-                    </p>
-                  </div>
-                </div>
-
-                {/* Gambar AFTER */}
-                <div className="border border-gray-300 relative group rounded-3xl overflow-hidden shadow-2xl">
-                  <img
-                    src="/pro3.png"
-                    alt="Setelah Kurikulum Merdeka"
-                    className="w-full h-96 md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-
-                  {/* Dark Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
-
-                  {/* Caption kecil di bawah */}
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <p className="text-white text-lg md:text-xl font-medium drop-shadow-lg">
-                      AFTER
-                    </p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
+              <div className="border border-gray-300 relative group rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/pro2.png"
+                  alt="Sebelum Kurikulum Merdeka"
+                  className="w-full h-96 md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <p className="text-white text-lg md:text-xl font-medium drop-shadow-lg">
+                    BEFORE
+                  </p>
                 </div>
               </div>
 
-              {/* Deskripsi Tambahan (opsional) */}
-              <p className="mt-12 md:text-center text-left text-lg md:text-xl max-w-4xl opacity-90" style={{ color: theme.surfaceText }}>
-                Kurikulum Merdeka memberikan kebebasan bagi siswa untuk belajar sesuai minat dan bakat, menciptakan pengalaman belajar yang lebih bermakna, kreatif, dan menyenangkan.
-              </p>
-            </motion.div>
+              <div className="border border-gray-300 relative group rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src="/pro3.png"
+                  alt="Setelah Kurikulum Merdeka"
+                  className="w-full h-96 md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <p className="text-white text-lg md:text-xl font-medium drop-shadow-lg">
+                    AFTER
+                  </p>
+                </div>
+              </div>
+            </div>
 
+            <p
+              className="mt-12 md:text-center text-left text-lg md:text-xl max-w-4xl opacity-90"
+              style={{ color: theme.surfaceText }}
+            >
+              Kurikulum Merdeka memberikan kebebasan bagi siswa untuk belajar sesuai minat dan bakat, menciptakan pengalaman belajar yang lebih bermakna, kreatif, dan menyenangkan.
+            </p>
+          </motion.div>
         </div>
       </section>
 
