@@ -31,14 +31,6 @@ const NavItem = React.memo(({ isCollapsed, isParentManajemenData = false, isChil
 
   const profile = useProfile();
   const isMember = profile?.user?.member === 'member';
-
-  // const isDisabled = [
-  //   lang.text('studentCard'),
-  //   // lang.text('libraryManagement'),
-  //   lang.text('formatManagement'),
-  // ].includes(props?.title) && !isMember && profile?.user?.role !== 'superAdmin';
-
-  // const showTooltip = isDisabled || (isParentManajemenData && props.title === lang.text('event'));
   const showTooltip = (isParentManajemenData && props.title === lang.text('event'));
 
   // Sembunyikan item dengan main: true saat isCollapsed = true
@@ -130,23 +122,6 @@ const NavItem = React.memo(({ isCollapsed, isParentManajemenData = false, isChil
     </>
   );
 });
-
-// function SidebarItem({ icon, label, active }: any) {
-//   return (
-//     <button
-//       className={clsx(
-//         "flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-sm",
-//         active
-//           ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-//           : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
-//       )}
-//     >
-//       <span className="grid h-7 w-7 place-content-center rounded-lg bg-white/5">{icon}</span>
-//       <span className="truncate text-left">{label}</span>
-//     </button>
-//   );
-// }
-
 
 export const Nav = React.memo(
   ({ items = [], mobile = false, isChild = false, isCollapsed, isParentManajemenData }: NavProps & { isCollapsed?: boolean; isParentManajemenData?: boolean }) => {

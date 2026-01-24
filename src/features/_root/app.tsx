@@ -47,7 +47,7 @@ const router = createBrowserRouter(
           element: <Homepage />, // Render HomepageLanding untuk "/"
         },
         {
-          path: "dashboard", // Relative: menjadi "/dashboard"
+          path: "/halaman-utama", // Relative: menjadi "/dashboard"
           element: <Homepage />, // Juga render HomepageLanding untuk "/dashboard"
         },
         {

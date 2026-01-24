@@ -76,12 +76,12 @@ const NAV = [
   {
     label: "Profil Sekolah",
     children: [
-      { label: "Halaman Utama", href: "/dashboard" },
+      { label: "Halaman Utama", href: "/halaman-utama" },
       { label: "Sambutan", href: "/sambutan" },
       { label: "Visi & Misi", href: "/visiMisi" },
       { label: "Galeri", href: "/galeri" },
       { label: "Sejarah", href: "/sejarah" },
-      { label: "Struktur", href: "/struktur" },
+      // { label: "Struktur", href: "/struktur" },
     ],
   },
   {

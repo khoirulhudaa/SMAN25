@@ -1,35 +1,34 @@
 import { SMAN25_CONFIG } from "@/core/theme";
 import { getXHostHeader } from "@/core/utils/XHostHeader";
+import BeritaComp from "@/features/_global/components/berita";
 import { FooterComp } from "@/features/_global/components/footer";
 import GalleryComp from "@/features/_global/components/galeri";
 import NavbarComp from "@/features/_global/components/navbar";
 import { queryClient } from "@/features/_root/queryClient";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Calendar, FileCheck, Thermometer, TrendingUp, UserCheck, UserX } from "lucide-react";
+import { Calendar, FileCheck, Thermometer, UserCheck, UserX } from "lucide-react";
 import { useEffect, useState } from "react";
+
+const BASE_URL = 'https://be-school.kiraproject.id/profileSekolah';
+
+interface SchoolProfile {
+  schoolId?: number;
+  schoolName?: string;
+  headmasterName?: string;
+  headmasterWelcome?: string;
+  heroTitle?: string;
+  heroSubTitle?: string;
+  photoHeadmasterUrl?: string;
+  studentCount?: number;
+  teacherCount?: number;
+  roomCount?: number;
+  achievementCount?: number;
+  linkYoutube?: string;
+}
 
 let useSwipeable;
 try { useSwipeable = require("react-swipeable").useSwipeable; } catch { useSwipeable = () => ({}) }
-
-const GLOBAL_DATA: any = {
-  announcements: [
-    { title: "Edaran Dinas: Libur Nasional & Cuti Bersama", date: "05 Sep 2025", tag: "Dinas", source: "dinas" },
-  ],
-  news: [
-    { title: "Program Magang Terpadu DKI", date: "18 Agu 2025", tag: "Dinas", source: "dinas", img: '/slide1.jpg', excerpt: "Dinas Pendidikan meluncurkan skema magang terpadu lintas industri untuk SMK di DKI Jakarta." },
-  ],
-};
-
-const ANNOUNCEMENTS_TENANT: any = [
-  { title: "PPDB 2025 Tahap 1 Dibuka", date: "06 Sep 2025", tag: "Akademik", source: "local" },
-  { title: "Pengambilan Rapor Semester Ganjil", date: "31 Okt 2025", tag: "Kesiswaan", source: "local" },
-];
-
-const MERGED_ANNOUNCEMENTS: any = [
-  ...GLOBAL_DATA.announcements.map((a: any) => ({ title: a.title, desc: `${a.tag}: ${a.title} — ${a.date}`, _meta: a })),
-  ...ANNOUNCEMENTS_TENANT.map((a: any) => ({ title: a.title, desc: `${a.tag}: ${a.title} — ${a.date}`, _meta: a })),
-];
 
 const SafeImage = ({ src, alt, className, style }: any) => {
   const [failed, setFailed] = useState(false);
@@ -120,36 +119,77 @@ const useAnnouncements = () => {
   });
 };
 
-const useNews = () => {
-  return useQuery({
-    queryKey: ['news'],
-    queryFn: async () => {
-      const res = await fetch('https://dev.kiraproject.id/public/berita?page=1&limit=20', {
-        cache: 'no-store',
-        headers: { 'X-Host': "sudindikjb2.id", 'Cache-Control': 'no-store' },
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error("Failed to fetch news");
-      return data.data.map((item: any) => ({
-        id: item.id,
-        title: item.title,
-        date: new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
-        tag: item.kategori,
-        img: item.featuredImage || '/defaultImage.png',
-        excerpt: item.excerpt,
-        source: item.sumber.toLowerCase() === 'dinas' ? 'dinas' : 'api',
-      }));
-    },
-  });
-};
+export function useNews(schoolId: string | number | undefined) {
+  const [news, setNews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!schoolId) {
+      setError("schoolId tidak ditemukan");
+      setLoading(false);
+      return;
+    }
+
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(`https://be-school.kiraproject.id/berita?schoolId=${schoolId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Jika nanti pakai autentikasi: "Authorization": `Bearer ${token}`,
+          },
+          cache: "no-store", // agar selalu fresh
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const json = await res.json();
+
+        if (!json.success) {
+          throw new Error(json.message || "Gagal mengambil berita");
+        }
+
+        // Mapping data sesuai struktur backend baru
+        const mappedNews = json.data.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          date: new Date(item.publishDate).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
+          tag: item.category || "Umum",
+          img: item.imageUrl || "/default-news.jpg",
+          excerpt: item.content.substring(0, 150) + "...", // potong jadi excerpt
+          source: item.source || "Sekolah",
+        }));
+
+        setNews(mappedNews);
+      } catch (err: any) {
+        console.error("Fetch news error:", err);
+        setError(err.message || "Gagal memuat berita");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, [schoolId]);
+
+  return { news, loading, error };
+}
 
 // Hook baru untuk profil sekolah (hanya ini yang ditambah)
 const useSchoolProfile = () => {
-  const schoolId = 25; // ← sesuaikan dengan ID sekolah yang ada di database
+  const schoolId = 88; // ← sesuaikan dengan ID sekolah yang ada di database
 
   const API_BASE = 'https://be-school.kiraproject.id';
-    // ? 'http://localhost:5005' 
-    // : 'https://be-school.kiraproject.id'; // sesuaikan URL production
 
   return useQuery({
     queryKey: ['schoolProfile', schoolId],
@@ -171,7 +211,7 @@ const useSchoolProfile = () => {
 // Hero - tetap layout & style asli, hanya ganti teks dari profil
 // ──────────────────────────────────────────────────────────────
 
-const Hero = ({ theme }: any) => {
+const Hero = () => {
   const { data: profile, isPending } = useSchoolProfile();
 
   const title = isPending || !profile?.heroTitle 
@@ -203,31 +243,73 @@ const Hero = ({ theme }: any) => {
 // SambutanSection - layout & style persis sama, hanya data dari profil
 // ──────────────────────────────────────────────────────────────
 
-const SambutanSection = ({ theme }: any) => {
-  const [sambutanQuery, headmastersQuery] = useSambutanAndHeadmasters();
-  const { data: profile, isPending: profilePending } = useSchoolProfile();
+const SambutanSection = () => {
+  const [profile, setProfile] = useState<SchoolProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const sambutan = sambutanQuery.data;
+  // Ganti dengan schoolId yang sesuai (bisa dari env, context, atau props)
+  const SCHOOL_ID = 88; // ← contoh: SMAN 25 Jakarta → sesuaikan!!!
 
-  if (sambutanQuery.isPending || profilePending) {
-    return <div className="py-24 text-left md:text-center">Loading sambutan...</div>;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${BASE_URL}?schoolId=${SCHOOL_ID}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // tambahkan Authorization jika nanti pakai JWT
+          },
+          cache: 'no-store', // atau 'force-cache' tergantung kebutuhan
+        });
+
+        const result = await res.json();
+
+        if (!result.success) {
+          throw new Error(result.message || 'Gagal mengambil data profil');
+        }
+
+        setProfile(result.data);
+      } catch (err: any) {
+        console.error('Error fetching school profile:', err);
+        setError(err.message || 'Terjadi kesalahan saat memuat data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return <div className="py-24 text-left md:text-center">Memuat sambutan kepala sekolah...</div>;
   }
 
-  // Gunakan data dari profil jika ada, fallback ke nilai asli
-  const headmasterName    = profile?.headmasterName   || sambutan?.name || "Kepala Sekolah";
-  const headmasterWelcome = profile?.headmasterWelcome || "Alhamdulillah, segala puji hanya milik Allah SWT, atas kehendak-Nya kami bisa hadir ditengah derasnya perkembangan teknologi informasi. Website sman25-jkt.sch.id kali ini merupakan update, baik dari sisi pengelolaan maupun isinya, dengan harapan dapat lebih memberikan layanan pendidikan yang prima terutama terkait informasi pendidikan.";
-  const photoUrl          = profile?.photoHeadmasterUrl || "/kapalaSekolah.png";
-  const schoolName        = profile?.schoolName       || "SMAN 25 Jakarta";
+  if (error) {
+    return (
+      <div className="py-24 text-left md:text-center text-red-600">
+        {error} (schoolId: {SCHOOL_ID})
+      </div>
+    );
+  }
+
+  // Fallback values jika data null / field kosong
+  const headmasterName    = profile?.headmasterName   || 'Kepala Sekolah';
+  const headmasterWelcome = profile?.headmasterWelcome || 
+    'Alhamdulillah, segala puji hanya milik Allah SWT...'; // fallback default Anda
+  const photoUrl          = profile?.photoHeadmasterUrl || '/kapalaSekolah.png';
+  const schoolName        = profile?.schoolName       || 'SMAN 25 Jakarta';
 
   const stats = [
-    { value: profile?.studentCount ? `${profile.studentCount} +` : "540 +", label: "Peserta Didik" },
-    { value: profile?.teacherCount ? `${profile.teacherCount} +` : "45 +",  label: "Guru Tendik" },
-    { value: profile?.roomCount    ? `${profile.roomCount} +`    : "30 +",  label: "Ruangan" },
-    { value: profile?.achievementCount ? profile.achievementCount : "100", label: "Penghargaan" },
+    { value: profile?.studentCount ? `${profile.studentCount}+` : '540+', label: 'Peserta Didik' },
+    { value: profile?.teacherCount  ? `${profile.teacherCount}+`  : '45+',  label: 'Guru Tendik' },
+    { value: profile?.roomCount     ? `${profile.roomCount}+`     : '30+',  label: 'Ruangan' },
+    { value: profile?.achievementCount ? `${profile.achievementCount}` : '100', label: 'Penghargaan' },
   ];
 
   return (
-    <section 
+    <section
       className="pt-10 md:pt-16 pb-16 md:pb-24 z-[1] bg-white relative overflow-hidden"
       style={{
         backgroundColor: '#ffffff',
@@ -247,37 +329,38 @@ const SambutanSection = ({ theme }: any) => {
         <div className="grid md:grid-cols-1 gap-12 items-center justify-center text-left md:text-center">
           <div className="relative">
             <div className="absolute top-0 left-0 z-10 w-48 md:w-64 -translate-y-8 md:-translate-y-12 -translate-x-4 md:-translate-x-8">
-              <SafeImage 
-                src="/sman25-sign.jpg"
-                alt="SMAN 25 JAKARTA" 
-                className="w-full" 
-              />
+              <SafeImage src="/sman25-sign.jpg" alt="SMAN 25 JAKARTA" className="w-full" />
             </div>
 
             <div className="relative rounded-2xl overflow-hidden">
-              <SafeImage 
+              <SafeImage
                 src={photoUrl}
                 alt="Kepala Sekolah"
-                className="w-full h-[400px] md:h-[460px] object-contain" 
+                className="w-full h-[400px] md:h-[460px] object-contain"
               />
             </div>
           </div>
 
           <div className="flex flex-col justify-center space-y-8">
             <div className="text-lg text-gray-700 leading-relaxed space-y-4">
-              {headmasterWelcome.split("\n").map((p: string, i: number) => (
+              {headmasterWelcome.split('\n').map((p: string, i: number) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
 
             <div className="mt-8">
-              <p className="text-2xl font-bold" style={{ color: 'black' }}>{headmasterName}</p>
+              <p className="text-2xl font-bold" style={{ color: 'black' }}>
+                {headmasterName}
+              </p>
               <p className="text-gray-600 text-lg">Kepala Sekolah {schoolName}</p>
             </div>
 
             <div className="hidden md:grid grid-cols-1 md:grid-cols-4 border-t border-gray-300 justify-center items-center gap-8 mt-14 pt-14">
               {stats.map((stat, i) => (
-                <div key={i} className="text-left md:text-center gap-3 w-full flex items-center justify-center relative">
+                <div
+                  key={i}
+                  className="text-left md:text-center gap-3 w-full flex items-center justify-center relative"
+                >
                   <p className="text-3xl md:text-5xl font-bold" style={{ color: 'black' }}>
                     {stat.value}
                   </p>
@@ -295,47 +378,144 @@ const SambutanSection = ({ theme }: any) => {
   );
 };
 
-const FasilitasSection = ({ theme }: any) => {
-  // Hardcoded contoh fasilitas dengan foto nyata/placeholder (ganti dengan data API/gallery jika ada)
-  const fasilitas = [
-    { name: 'Mushola', img: '/f1.jpg' },
-    { name: 'UKS', img: '/f2.jpg' },
-    { name: 'Kantin', img: '/f3.jpg' },
-    { name: 'Lapangan Olahraga', img: '/f4.jpg' },
-    { name: 'Laboratorium Sains', img: '/f5.jpg' },
-    { name: 'Perpustakaan', img: '/f6.jpgg' },
-  ];
+interface Facility {
+  id: number;
+  name: string;
+  description?: string;
+  imageUrl?: string | null;
+}
+
+const FasilitasSection = () => {
+  const schoolId = "88";
+
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!schoolId) {
+      setError("School ID tidak ditemukan");
+      setLoading(false);
+      return;
+    }
+
+    const fetchFacilities = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(`https://be-school.kiraproject.id/fasilitas?schoolId=${schoolId}`, {
+          cache: "no-store",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const json = await res.json();
+
+        if (!json.success || !Array.isArray(json.data)) {
+          throw new Error("Format response tidak valid");
+        }
+
+        // Mapping data dari backend
+        const mapped = json.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          imageUrl: item.imageUrl || null,
+        }));
+
+        setFacilities(mapped);
+      } catch (err: any) {
+        console.error("Fetch fasilitas error:", err);
+        setError(err.message || "Gagal memuat fasilitas");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFacilities();
+  }, [schoolId]);
+
+  if (loading) {
+    return (
+      <section className="py-8 md:py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-gray-600">Memuat fasilitas sekolah...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-8 md:py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (facilities.length === 0) {
+    return (
+      <section className="py-8 md:py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold" style={{ color: "black" }}>
+            Fasilitas Sekolah Kami
+          </h2>
+          <p className="text-gray-500 mt-4">Belum ada data fasilitas yang tersedia saat ini.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-8 md:py-20 bg-gradient-to-b from-indigo-100 via-purple-50 to-white">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.h2 
-          initial={{ opacity: 0, y: -30 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          className="text-3xl md:text-5xl font-bold text-left md:text-center" 
-          style={{ color: 'black' }}>
+        <motion.h2
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="text-3xl md:text-5xl font-bold text-left md:text-center"
+          style={{ color: "black" }}
+        >
           Fasilitas Sekolah Kami
         </motion.h2>
-        <p className="text-xs mb-16 text-left md:text-center mx-auto mt-3 text-gray-500">(Gambar hanyalah ilustrasi)</p>
+        <p className="text-xs mb-16 text-left md:text-center mx-auto mt-3 text-gray-500">
+          (Data diambil dari sistem sekolah)
+        </p>
 
-        {/* Masonry grid responsif (2-4 kolom) */}
+        {/* Masonry grid responsif */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-auto">
-          {fasilitas.map((item, i) => (
-            <motion.div 
-              key={i} 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
+          {facilities.map((item, i) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.1 }}
-              className="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-500">
-              <img 
-                src={item.img} 
-                alt={item.name} 
-                className="w-full h-full object-cover scale-110 transition-transform duration-700" 
-                style={{ minHeight: '300px' }}
+              className="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-500"
+            >
+              <img
+                src={item.imageUrl || "/default-facility.jpg"} 
+                alt={item.name}
+                className="w-full h-full object-cover scale-110 transition-transform duration-700 group-hover:scale-125"
+                style={{ minHeight: "300px" }}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/default-facility.jpg";
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-500 flex items-end">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 opacity-100 transition-opacity duration-500 flex items-end">
                 <div className="p-6 text-white">
                   <h3 className="text-2xl font-bold">{item.name}</h3>
+                  {item.description && (
+                    <p className="text-sm mt-2 opacity-90 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -346,7 +526,7 @@ const FasilitasSection = ({ theme }: any) => {
   );
 };
 
-const PengurusSection = ({ theme }: any) => {
+const PengurusSection = () => {
   const [, headmastersQuery] = useSambutanAndHeadmasters();
   const headmasters = headmastersQuery.data || [];
 
@@ -377,29 +557,84 @@ const PengurusSection = ({ theme }: any) => {
   );
 };
 
-const BeritaSection = ({ theme }: any) => {
-  const { data: items = [], isPending } = useNews();
-  if (isPending) return <div className="py-16 text-left md:text-center">Loading berita...</div>;
+const BeritaSection = () => {
+  const SCHOOL_ID = "88";
+  const { news: items = [], loading, error } = useNews(SCHOOL_ID);
+
+  if (loading) {
+    return (
+      <div className="py-16 text-center text-gray-600">
+        Memuat berita sekolah...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-16 text-center text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="py-16 text-center text-gray-500">
+        Belum ada berita saat ini
+      </div>
+    );
+  }
 
   return (
     <section className="py-0 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold" style={{ color: 'black' }}>Berita & Pengumuman</h2>
-          <TrendingUp size={40} style={{ color: 'black' }} />
+          <h2
+            className="text-3xl md:text-4xl font-bold"
+            style={{ color: "black" }}
+          >
+            Berita Sekolah
+          </h2>
         </div>
+
         <div className="grid md:grid-cols-3 gap-8">
           {items.map((n: any, i: number) => (
-            <div key={i} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
-                <Calendar className="text-white" size={64} />
-              </div>
+            <div
+              key={n.id || i}
+              className="bg-white rounded-xl cursor-pointer hover:brightness-95 overflow-hidden shadow-2xl transition-shadow duration-300"
+            >
+              {/* Gambar atau placeholder */}
+              {n.img ? (
+                <img
+                  src={n.img}
+                  alt={n.title}
+                  className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/default-news.jpg";
+                  }}
+                />
+              ) : (
+                <div className="h-48 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <Calendar className="text-white" size={64} />
+                </div>
+              )}
+
               <div className="p-6">
-                <span className="inline-block px-4 py-1 rounded-full text-xs font-semibold mb-4" style={{ background: theme.accent + '40', color: 'black' }}>
+                <span
+                  className="inline-block px-4 py-1 rounded-full text-xs font-semibold mb-4"
+                  style={{
+                    background: `${theme?.accent || "#3b82f6"}40`,
+                    color: "black",
+                  }}
+                >
                   {n.tag}
                 </span>
-                <h3 className="text-xl font-semibold mb-3 text-gray-800">{n.title}</h3>
+                <h3 className="text-xl font-semibold mb-3 text-gray-800 line-clamp-2">
+                  {n.title}
+                </h3>
                 <p className="text-sm text-gray-500">{n.date}</p>
+                {/* Optional: tampilkan excerpt jika mau */}
+                {/* <p className="mt-3 text-gray-600 line-clamp-3">{n.excerpt}</p> */}
               </div>
             </div>
           ))}
@@ -407,34 +642,57 @@ const BeritaSection = ({ theme }: any) => {
       </div>
     </section>
   );
-};
+}
 
-const VideoSection = ({ theme }: any) => {
-  const { data: profile, isPending } = useSchoolProfile();
+const VideoSection = () => {
+  const [profile, setProfile] = useState<SchoolProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Fungsi sederhana untuk ekstrak YouTube video ID dari berbagai format URL
-  const getYouTubeId = (url: string | null | undefined): string | null => {
+  const SCHOOL_ID = 88; // ← sesuaikan!!!
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${BASE_URL}?schoolId=${SCHOOL_ID}`);
+        const result = await res.json();
+
+        if (result.success) {
+          setProfile(result.data);
+        }
+      } catch (err) {
+        console.error('Gagal memuat video profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const getYouTubeId = (url?: string): string | null => {
     if (!url) return null;
-
-    // Regex untuk menangkap ID dari berbagai format: youtu.be, youtube.com/watch?v=, embed/, dll.
     const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
-
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : null;
   };
 
   const videoId = getYouTubeId(profile?.linkYoutube);
 
-  // Jika masih loading atau tidak ada video
-  if (isPending) {
+  if (loading) {
     return (
       <section className="md:py-6">
         <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
-          <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
-            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center"
+          >
             Kegiatan Sekolah dalam Video
           </motion.h2>
-          <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">Memuat video...</p>
+          <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">
+            Memuat video...
+          </p>
           <div className="max-w-7xl mx-auto">
             <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gray-200 animate-pulse" />
           </div>
@@ -443,19 +701,20 @@ const VideoSection = ({ theme }: any) => {
     );
   }
 
-  // Jika tidak ada linkYoutube atau ID tidak valid → fallback ke pesan atau video default
   if (!videoId) {
     return (
       <section className="md:py-6">
         <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
-          <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
-            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-2xl md:text-5xl text-black font-bold text-left md:text-center"
+          >
             Kegiatan Sekolah dalam Video
           </motion.h2>
           <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">
             Video kegiatan sekolah belum tersedia
           </p>
-          {/* Opsional: tampilkan placeholder atau gambar */}
           <div className="max-w-7xl mx-auto">
             <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gray-200 flex items-center justify-center">
               <p className="text-gray-500 text-lg">Tidak ada video saat ini</p>
@@ -466,34 +725,34 @@ const VideoSection = ({ theme }: any) => {
     );
   }
 
-  // Embed URL yang benar
   const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
   return (
     <section className="md:py-6">
       <div className="max-w-7xl py-6 rounded-lg mx-auto px-6">
-        <motion.h2 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} 
-          className="text-2xl md:text-5xl text-black font-bold text-left md:text-center">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="text-2xl md:text-5xl text-black font-bold text-left md:text-center"
+        >
           Kegiatan Sekolah dalam Video
         </motion.h2>
-        {/* Gunakan deskripsi dinamis jika ingin, atau tetap statis */}
         <p className="text-left md:text-center w-full mb-12 text-gray-500 mt-5">
-          {profile?.heroTitle || "Kegiatan Senam Pagi SMAN 25 Jakarta – Jumat, 7 Juni 2024"}
+          {profile?.heroTitle || 'Kegiatan Sekolah SMAN 25 Jakarta'}
         </p>
 
         <div className="max-w-7xl mx-auto">
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
-            <iframe 
-              width="100%" 
-              height="100%" 
+            <iframe
+              width="100%"
+              height="100%"
               src={embedUrl}
               title={`Video dari ${profile?.schoolName || 'SMAN 25 Jakarta'}`}
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              referrerPolicy="strict-origin-when-cross-origin" 
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               className="absolute inset-0"
-            ></iframe>
+            />
           </div>
         </div>
       </div>
@@ -540,7 +799,7 @@ const InstagramFeedSection = ({ theme }: any) => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-6">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -563,7 +822,7 @@ const InstagramFeedSection = ({ theme }: any) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow"
+              className="bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col hover:brightness-[90%] transition-shadow"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-4">
@@ -625,7 +884,7 @@ const InstagramFeedSection = ({ theme }: any) => {
 };
 
 // === STATS BAR ===
-const StatsBar = ({ theme }: any) => {
+const StatsBar = () => {
   const { data: stats = [], isPending, error } = useStats();
 
   // Daftar icon sesuai urutan stats (sesuaikan dengan data stats kamu)
@@ -678,19 +937,308 @@ const StatsBar = ({ theme }: any) => {
   );
 };
 
+const useComments = (schoolId: number) => {   // parameter tetap number
+  const API_BASE = 'https://be-school.kiraproject.id';
+
+  const query = useQuery({
+    queryKey: ['comments', schoolId],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE}/rating?schoolId=${schoolId}`, {
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Gagal memuat komentar');
+      return data.data || [];
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (newComment: { name: string; email: string; comment: string; rating: number }) => {
+      const res = await fetch(`${API_BASE}/rating`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          ...newComment,
+          schoolId,              
+        }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Gagal mengirim komentar');
+      return data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', schoolId] });
+    },
+  });
+
+  return { ...query, mutate: mutation.mutate, isSubmitting: mutation.isPending };
+};
+
+const CommentSection = () => {
+  const schoolId = 88;  // ← number, bukan string "88"
+
+  const { data: comments = [], isPending, error } = useComments(schoolId);
+  const { mutate, isSubmitting } = useComments(schoolId);
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    comment: '',
+    rating: 5,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRatingChange = (value: number) => {
+    setForm(prev => ({ ...prev, rating: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.comment.trim()) {
+      alert('Nama dan komentar wajib diisi');
+      return;
+    }
+
+    // Catatan: userId sementara kita hardcode atau bisa ambil dari auth nanti
+    mutate({
+      email: form.email.trim() || 'anonymous@example.com',
+      name: form.name.trim(),
+      comment: form.comment.trim(),
+      rating: form.rating,
+    }, {
+      onSuccess: () => {
+        setForm({ name: '', email: '', comment: '', rating: 5 });
+        alert('Terima kasih atas ulasan Anda!');
+      },
+      onError: (err: any) => {
+        alert('Gagal mengirim: ' + (err.message || 'Unknown error'));
+      }
+    });
+  };
+
+  const averageRating = comments.length > 0
+    ? (comments.reduce((sum: number, c: any) => sum + Number(c.rating), 0) / comments.length).toFixed(1)
+    : '0.0';
+
+  return (
+    <section className="py-12 md:pt-16 pb-10 bg-gradient-to-b from-gray-50 to-white">
+      <div className="max-w-4xl mx-auto px-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: 'black' }}>
+          Ulasan & Rating
+        </h2>
+        <p className="text-center text-gray-600 mb-10">
+          Rating rata-rata: <span className="font-bold text-2xl text-yellow-600">{averageRating} ★</span> 
+          <span className="ml-2">
+            ({comments.length} ulasan)
+          </span>
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border mb-12">
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">Nama</label>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="w-full text-black px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Nama Anda"
+              />
+            </div>
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">Email (opsional)</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full px-4 text-black py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="email@contoh.com"
+              />
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-black text-sm font-medium mb-2">Rating</label>
+            <div className="flex gap-1">
+              {[1,2,3,4,5].map((star: any) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => handleRatingChange(star)}
+                  className={`text-3xl transition-colors ${
+                    star <= form.rating ? 'text-yellow-400' : 'text-gray-300'
+                  } hover:text-yellow-500`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-black text-sm font-medium mb-2">Komentar / Saran</label>
+            <textarea
+              name="comment"
+              value={form.comment}
+              onChange={handleChange}
+              required
+              rows={4}
+              className="w-full px-4 text-black py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Tuliskan pengalaman atau saran Anda..."
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition ${
+              isSubmitting 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            {isSubmitting ? 'Mengirim...' : 'Kirim Ulasan'}
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+};
+
+interface Sponsor {
+  id: number;
+  name: string;
+  imageUrl?: string | null;
+}
+
+const SponsorMarqueeSection = () => {
+  const schoolId = "88";
+
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!schoolId) return;
+
+    const fetchSponsors = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`https://be-school.kiraproject.id/partner?schoolId=${schoolId}`, {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("Gagal memuat sponsor");
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data)) {
+          setSponsors(json.data);
+        }
+      } catch (err) {
+        console.error("Error fetch sponsor:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSponsors();
+  }, [schoolId]);
+
+  // Duplikat data agar terlihat seamless infinite loop
+  const duplicatedSponsors = [...sponsors, ...sponsors];
+
+  if (loading || sponsors.length === 0) {
+    return null; 
+  }
+
+  return (
+    <section className="py-12 md:py-16 bg-gradient-to-r from-gray-50 to-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">
+          Mitra & Sponsor Kami
+        </h2>
+
+        <div className="relative mt-16">
+          {/* Marquee container */}
+          <div
+            className="flex animate-marquee hover:pause-marquee whitespace-nowrap"
+            style={{
+              animation: "marquee 30s linear infinite",
+            }}
+          >
+            {duplicatedSponsors.map((sponsor, index) => (
+              <div
+                key={`${sponsor.id}-${index}`}
+                className="flex-shrink-0 mx-2 flex flex-col items-center justify-center"
+                style={{ minWidth: "200px" }}
+              >
+                {sponsor.imageUrl ? (
+                  <img
+                    src={sponsor.imageUrl}
+                    alt={sponsor.name}
+                    className="h-20 md:h-24 w-auto object-contain transition-all duration-300"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="h-16 md:h-20 w-32 bg-gray-200 rounded flex items-center justify-center text-gray-500 text-xs">
+                    Logo
+                  </div>
+                )}
+                {/* <p className="mt-3 text-sm text-gray-600 font-medium text-center">
+                  {sponsor.name}
+                </p> */}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CSS Animasi */}
+      <style jsx global>{`
+        @keyframes marquee {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+        .pause-marquee:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+    </section>
+  );
+};
+
 // Page utama
 const Page = ({ theme, onTenantChange, currentKey }: any) => (
   <div className="min-h-screen bg-white">
     <NavbarComp theme={theme} onTenantChange={onTenantChange} currentKey={currentKey} />
-    <Hero theme={theme} />
-    <StatsBar theme={theme} />
-    <SambutanSection theme={theme} />
-    <FasilitasSection theme={theme} />
-    <VideoSection theme={theme} />
-    <PengurusSection theme={theme} />
-    <BeritaSection theme={theme} />
+    <Hero />
+    {/* <StatsBar theme={theme} /> */}
+    <SambutanSection />
+    <FasilitasSection />
+    <VideoSection />
+    <PengurusSection />
+    <BeritaComp />
     <GalleryComp />
     <InstagramFeedSection theme={theme} />
+    <CommentSection />
+    <SponsorMarqueeSection />
     <FooterComp theme={theme} />
   </div>
 );
